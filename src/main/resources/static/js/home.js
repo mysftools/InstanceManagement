@@ -142,8 +142,9 @@ jQuery(document).ready(function () {
 				data: "id",
 				mRender: function (data, type, row) {
 					var str;
-					str = "<div class='btn-group'>" +
-						"<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
+					str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
+							"onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
+						"</button>"+"<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=red('" + row.instToken + "')> Instance Details" +
 						"</button>"
 
 					return str;
@@ -162,7 +163,9 @@ jQuery(document).ready(function () {
 
 });
 
-
+function red(token) {
+	 window.location.replace("/instancedetails?token="+token);
+}
 
 $("#inst").click(function () {
 

@@ -1,0 +1,13 @@
+@charset "ISO-8859-1";
+
+td {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 20px;
+}
+
+tr {
+	overflow: auto;
+	text-overflow: ellipsis;
+	max-height: 25px;
+}
