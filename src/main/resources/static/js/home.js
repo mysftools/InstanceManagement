@@ -113,7 +113,7 @@ jQuery(document).ready(function () {
 		},
 		// Load data for the table's content from an Ajax source
 		"ajax": {
-			"url": "/instancemanagement/getall",
+			"url": "instancemanagement/getall",
 			"type": "POST",
 			"dataSrc": ''
 		},
@@ -278,7 +278,7 @@ $("#inst-run").click(function () {
 function updatecalls(calls) {
 	$.ajax({
 		type: 'POST',
-		url: "/usermanagement/updatecalls?calls=" + calls,
+		url: "usermanagement/updatecalls?calls=" + calls,
 		dataType: "JSON",
 		async: true,
 		processData: false,

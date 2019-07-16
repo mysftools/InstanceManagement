@@ -18,7 +18,7 @@
     <!-- BEGIN LOGIN -->
     <div class="content">
         <!-- BEGIN LOGIN FORM -->
-        <form class="login-form" action="/authenticate" method="post">
+        <form class="login-form" action="authenticate" method="post">
             <h3 class="form-title">Login to your account</h3>
             <span>${error}</span>
             <div class="alert alert-danger display-hide">

@@ -16,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.instance.management.model.UserMetaModel;
 import com.instance.management.reposetory.UserReposetory;
 
+
+
 @Controller
 @RequestMapping("/")
 public class AurthController {
@@ -59,7 +61,7 @@ public class AurthController {
 
 				usermodel.setAttempt(0);
 				userrepo.save(usermodel);
-				response.sendRedirect("/instancemanagement");
+				response.sendRedirect("instancemanagement");
 				return null;
 			} else {
 				if (!usermodel.getStatus()) {

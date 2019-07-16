@@ -7,7 +7,7 @@
 <head>
 	<meta charset="ISO-8859-1">
 	<title>${page}</title>
-	<link href="/resources/css/${page}.css" rel="stylesheet" type="text/css" />
+	<link href="resources/css/${page}.css" rel="stylesheet" type="text/css" />
 	<%@ include file="include/styles.jsp" %>
 </head>
 
@@ -22,7 +22,7 @@
 	<%@ include file="include/footer.jsp" %>
 	<%@ include file="include/scripts.jsp" %>
 
-	<script src="/resources/js/${page}.js" type="text/javascript"></script>
+	<script src="resources/js/${page}.js" type="text/javascript"></script>
 
 	<script>
 		$(document).ready(function () {
@@ -31,7 +31,7 @@
 
 		});
 	</script>
-	<script src="/resources/assets/pages/scripts/components-multi-select.js" type="text/javascript"></script>
+	<script src="resources/assets/pages/scripts/components-multi-select.js" type="text/javascript"></script>
 
 </body>
 
