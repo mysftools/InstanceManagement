@@ -3,13 +3,13 @@ package com.instance.management.system;
 import java.io.File;
 import java.net.URLDecoder;
 
-import com.instance.management.InastancemanagementApplication;
+import com.instance.management.TomcateTestApplication;
 
 public class DirPath {
 
 	public static String setPath() throws Exception {
 
-		String path = InastancemanagementApplication.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		String path = TomcateTestApplication.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		String decodedPath = URLDecoder.decode(path, "UTF-8");
 		File jarFile = new File(decodedPath);
 		String jarDir = jarFile.getParentFile().getParentFile().getParent();

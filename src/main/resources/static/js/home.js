@@ -427,11 +427,9 @@ function getinst(token) {
 	$(".register-form")[0].reset();
 	$('.modal-title').text('Update Instance Details');
 	$('#new_inst').modal('show');
-
-
+	
 	var form = new FormData();
 	form.append("token", token);
-
 	$.ajax({
 		type: 'POST',
 		url: "instancemanagement/findbyinsttoken",
