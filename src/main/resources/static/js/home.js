@@ -264,17 +264,54 @@ $("#inst-run").click(function () {
 		var duration = 5000;
 		for (var i = 0; i < d; i++) {
 			 progress(i,prog);
-			 console.log('done');
 			var request =runcode(form,i,prog);
 			  promises.push( request);
 			 
 		};
+		updatecalls(d);
 		addinstdetails(form);
 		//postProcess();
 	};
 
 });
 
+function updatecalls(calls){
+	$.ajax({
+		type: 'POST',
+		url: "/usermanagement/updatecalls?calls="+calls,
+		dataType: "JSON",
+		async: true,
+		processData: false,
+		cache: false,
+		contentType: "application/json",
+		beforeSend: function () {
+			App.blockUI({
+				boxed: true,
+				message: "Please Wait..."
+			});
+		},
+		success: function (data) {
+			viewcounter();
+			if (data.status) {
+				//success("DONE");
+				App.unblockUI();
+				list_refresh();
+			} else if (!data.status) {
+				error("Problem occures during process");
+				App.unblockUI();
+			} else {
+				error("Problem occures during process");
+				App.unblockUI();
+			}
+
+		},
+		error: function () {
+			viewcounter();
+			error("Problem occures during process");
+			App.unblockUI();
+		}
+	});
+}
 function progress(i,prog) {
 	$("#p").attr('style', 'width: ' + (i+1)*prog + '%; color : red;');
 	

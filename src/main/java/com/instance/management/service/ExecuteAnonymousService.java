@@ -4,12 +4,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -21,19 +21,31 @@ import com.instance.management.model.UserMetaModel;
 import com.instance.management.reposetory.InstanceReposetory;
 import com.instance.management.reposetory.UserReposetory;
 
+@Service
 public class ExecuteAnonymousService implements Runnable {
 
-	@Autowired
 	SalesForceAuthService authService;
 
-	@Autowired
 	UserReposetory userrepo;
 
-	@Autowired
 	InstanceReposetory instancerepo;
 
-	ApexModel apexModel;
-	HttpSession session;
+	ApexModel apexModel = null;
+
+	HttpSession session = null;
+
+	public ExecuteAnonymousService() {
+
+	}
+
+	public ExecuteAnonymousService(HttpSession session, ApexModel apexModel, UserReposetory userrepo,
+			InstanceReposetory instancerepo, SalesForceAuthService authService) throws Exception {
+		this.instancerepo=instancerepo;
+		this.authService=authService;
+		this.userrepo = userrepo;
+		this.session = session;
+		this.apexModel = apexModel;
+	}
 
 	@Override
 	public void run() {
@@ -45,20 +57,10 @@ public class ExecuteAnonymousService implements Runnable {
 		}
 	}
 
-	public ExecuteAnonymousService() {
-
-	}
-
-	public ExecuteAnonymousService(HttpSession session, ApexModel apexModel) throws Exception {
-		this.session=session;
-		this.apexModel = apexModel;
-	}
-
 	public Object runapex(Map<String, Object> responsemessage) {
 		try {
 
 			if (Boolean.parseBoolean(responsemessage.get("status").toString())) {
-
 				HttpHeaders headers = new HttpHeaders();
 				headers.setContentType(MediaType.APPLICATION_JSON);
 				headers.set("Authorization", "Bearer " + responsemessage.get("access_token").toString());
@@ -86,17 +88,15 @@ public class ExecuteAnonymousService implements Runnable {
 	}
 
 	public Object runapex1(HttpSession session, ApexModel apexModel) throws Exception {
+		
 		UserMetaModel userMetaModel = userrepo.findBytoken(session.getAttribute("token").toString());
 		if (userMetaModel.getRemainingCalls() >= apexModel.getNum()) {
-			int n = userMetaModel.getRemainingCalls() - 1;
-			userMetaModel.setRemainingCalls(n);
 			InstanceMetaModel instanceMetaModel = instancerepo.findByinstToken(apexModel.getToken());
 			Map<String, Object> responsemessage = authService.login(userMetaModel.getUsername(),
 					userMetaModel.getPassword(), instanceMetaModel.getClientkey(),
 					instanceMetaModel.getClientSecreat());
 			if (Boolean.parseBoolean(responsemessage.get("status").toString())) {
 				responsemessage.put("code", apexModel.getCode());
-				userrepo.save(userMetaModel);
 				return runapex(responsemessage);
 			} else {
 				return responsemessage;

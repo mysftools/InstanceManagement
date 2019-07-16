@@ -44,7 +44,6 @@ $("#user-update").click(function () {
 	var form = {
 			"token":$("#token").val(),
     		"username":$("#username").val(),
-    		
     		"calls":$("calls").val,
     };
 	

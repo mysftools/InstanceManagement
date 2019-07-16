@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.instance.management.model.ChangepwdModel;
@@ -120,6 +121,28 @@ public class UserManagementController {
 
 	}
 
+	@PostMapping("/updatecalls")
+	public @ResponseBody Object updatecalls(@RequestParam int calls, HttpServletResponse response, HttpSession session) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			if (!LoginController.userValidate(session)) {
+				response.sendRedirect("/");
+				return null;
+			}
+			UserMetaModel userMetaModel = userrepo.findBytoken(session.getAttribute("token").toString());
+			userMetaModel.setRemainingCalls(userMetaModel.getRemainingCalls() - calls);
+			userrepo.save(userMetaModel);
+			map.put("status", true);
+			map.put("message", "User Updated successfully");
+			return map;
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("status", false);
+			map.put("message", "some error has bean occured");
+			return map;
+		}
+	}
+
 	@PostMapping("/changepassword")
 	public @ResponseBody Object changepassword(@RequestBody ChangepwdModel changepwdModel, HttpServletResponse response,
 			HttpSession session) throws Exception {
@@ -153,7 +176,7 @@ public class UserManagementController {
 
 	@PostMapping("/forgetpassword")
 	public @ResponseBody Object forgetpassword(@RequestBody Map<String, String> email) {
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			return otpSendService.sendOtp(email.get("email"));
