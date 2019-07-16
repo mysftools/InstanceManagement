@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.instance.management.model.InstanceRunDetailsModel;
+import com.instance.management.model.InstanceRunDetailsMetaModel;
 
 @Repository
-public interface InstanceRunDetailsReposetory extends JpaRepository<InstanceRunDetailsModel, Integer> {
+public interface InstanceRunDetailsReposetory extends JpaRepository<InstanceRunDetailsMetaModel, Integer> {
 
-	List<InstanceRunDetailsModel> findByinstToken(String token);
-
+	List<InstanceRunDetailsMetaModel> findByinstToken(String token);
+	InstanceRunDetailsMetaModel findBydetailToken(String token);
 }

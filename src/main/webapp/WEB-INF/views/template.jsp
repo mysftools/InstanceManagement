@@ -6,7 +6,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>${page}</title>
-
+	<link href="/resources/css/${page}.css" rel="stylesheet" type="text/css" />
 	<%@ include file="include/styles.jsp" %>
 </head>
  <body class="page-container-bg-solid page-md">

@@ -2043,6 +2043,7 @@ th {
   .table > tfoot > tr > td {
     padding: 8px;
     line-height: 1.42857;
+    vertical-align: top;
     border-top: 1px solid #e7ecf1; }
   .table > thead > tr > th {
     vertical-align: bottom;
@@ -4107,7 +4108,7 @@ tbody.collapse.in {
   .pagination > .active > span,
   .pagination > .active > span:hover,
   .pagination > .active > span:focus {
-   
+    z-index: 3;
     color: #fff;
     background-color: #337ab7;
     border-color: #337ab7;

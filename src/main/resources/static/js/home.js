@@ -144,7 +144,7 @@ jQuery(document).ready(function () {
 					var str;
 					str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
 							"onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
-						"</button>"+"<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=red('" + row.instToken + "')> Instance Details" +
+						"</button>"+"<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> Instance Details" +
 						"</button>"
 
 					return str;
@@ -163,7 +163,7 @@ jQuery(document).ready(function () {
 
 });
 
-function red(token) {
+function showinstdetails(token) {
 	 window.location.replace("/instancedetails?token="+token);
 }
 
@@ -269,7 +269,7 @@ $("#inst-run").click(function () {
 			  promises.push( request);
 			 
 		};
-		
+		addinstdetails(form);
 		//postProcess();
 	};
 
@@ -279,6 +279,45 @@ function progress(i,prog) {
 	$("#p").attr('style', 'width: ' + (i+1)*prog + '%; color : red;');
 	
 	$("#pvalue").text((i+1)*prog+"%");
+}
+
+function addinstdetails(form) {
+	$.ajax({
+		type: 'POST',
+		url: "instancedetails/add",
+		dataType: "JSON",
+		async: true,
+		data: JSON.stringify(form),
+		processData: false,
+		cache: false,
+		contentType: "application/json",
+		beforeSend: function () {
+			App.blockUI({
+				boxed: true,
+				message: "Please Wait..."
+			});
+		},
+		success: function (data) {
+			viewcounter();
+			if (data.status) {
+				//success("DONE");
+				App.unblockUI();
+				list_refresh();
+			} else if (!data.status) {
+				error("Problem occures during process");
+				App.unblockUI();
+			} else {
+				error("Problem occures during process");
+				App.unblockUI();
+			}
+
+		},
+		error: function () {
+			viewcounter();
+			error("Problem occures during process");
+			App.unblockUI();
+		}
+	});
 }
 
 function runcode(form,i,prog) {

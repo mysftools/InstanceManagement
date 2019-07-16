@@ -23,23 +23,19 @@ jQuery(document).ready(function () {
 		//Set column definition initialisation properties.
 		"columns": [
 			{
-				data: "id",
-				mRender: function (data, type, row) {
-					return '<i style="radius= 50%; font-size: 20px; color: royalblue;" onclick="getinst(' + "'" + row.instToken + "'" + ')" class="fa fa-eye"></i>';
-
-				}
-			},
-			{
 				data: "instname"
 			},
 			{
 				data: "id",
 				mRender: function (data, type, row) {
-					return '<span style=" height:50px " onclick="getinst(' + "'" + row.instToken + "'" + ')" >' + row.stript + '</span>';
+					return '<div id="scripttr"><span style=" height:50px " onclick="getscript(' + "'" + row.detailToken + "'" + ')" >' + row.stript.replace(/\n/g, "<br />");   + '</span></div>';
 				}
 			},
 			{
-				data: "date"
+				data: "id",
+				mRender: function (data, type, row) {
+					return row.date.split(".")[0];
+				}
 			},
 			{
 				data: "noOfCalls"
@@ -51,3 +47,47 @@ jQuery(document).ready(function () {
 	};
 });
 
+function getscript(token){
+	
+	$.ajax({
+		type: 'POST',
+		url: "instancedetails/getbyid?token="+token,
+		dataType: "JSON",
+		async: true,
+		processData: false,
+		cache: false,
+		contentType: "application/json",
+		beforeSend: function () {
+
+			App.blockUI({
+				boxed: true,
+				message: "Please Wait..."
+			});
+		},
+		success: function (data) {
+			if (data.status) {
+				//success(data.message);
+				App.unblockUI();
+				//console.log(data.respons['stript']);
+				$('.title').text(data.respons['instname']);
+				$('.script').empty()
+				$('.script').append(data.respons['stript'].replace(/\n/g, "<br />"));
+				$('#responsive').modal('show');
+				
+			} else if (!data.status) {
+				error("Problem occures during process");
+				App.unblockUI();
+			} else {
+				error("Problem occures during process");
+				list_refresh();
+				App.unblockUI();
+			}
+
+		},
+		error: function () {
+			list_refresh();
+			App.unblockUI();
+		}
+	});
+	
+}
