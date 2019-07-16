@@ -144,7 +144,7 @@ jQuery(document).ready(function () {
 					var str;
 					str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
 							"onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
-						"</button>"+"<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> Instance Details" +
+						"</button>"+"<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> Instance Details" +
 						"</button>"
 
 					return str;
