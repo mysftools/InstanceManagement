@@ -87,7 +87,7 @@ jQuery(document).ready(function () {
 
 	viewcounter();
 	Login.init();
-	
+
 	$("#new_user").click(function () {
 
 		$("#instence").show();
@@ -118,7 +118,7 @@ jQuery(document).ready(function () {
 			"dataSrc": ''
 		},
 		//Set column definition initialisation properties.
-		
+
 		"columns": [
 			{
 				data: "id",
@@ -143,8 +143,8 @@ jQuery(document).ready(function () {
 				mRender: function (data, type, row) {
 					var str;
 					str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
-							"onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
-						"</button>"+"<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> Instance Details" +
+						"onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
+						"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> Instance Details" +
 						"</button>"
 
 					return str;
@@ -164,7 +164,7 @@ jQuery(document).ready(function () {
 });
 
 function showinstdetails(token) {
-	 window.location.replace("/instancedetails?token="+token);
+	window.location.replace("/instancedetails?token=" + token);
 }
 
 $("#inst").click(function () {
@@ -222,7 +222,7 @@ $("#inst").click(function () {
 
 function runapex(token, name) {
 	viewcounter();
-	var n =Number($("#sc").text());
+	var n = Number($("#sc").text());
 	if (n <= 0) {
 		warnUser();
 	} else {
@@ -259,14 +259,14 @@ $("#inst-run").click(function () {
 			max: n
 		});
 	} else {
-		var prog=100/d;
+		var prog = 100 / d;
 		var promises = [];
 		var duration = 5000;
 		for (var i = 0; i < d; i++) {
-			 progress(i,prog);
-			var request =runcode(form,i,prog);
-			  promises.push( request);
-			 
+			progress(i, prog);
+			var request = runcode(form, i, prog);
+			promises.push(request);
+
 		};
 		updatecalls(d);
 		addinstdetails(form);
@@ -275,10 +275,10 @@ $("#inst-run").click(function () {
 
 });
 
-function updatecalls(calls){
+function updatecalls(calls) {
 	$.ajax({
 		type: 'POST',
-		url: "/usermanagement/updatecalls?calls="+calls,
+		url: "/usermanagement/updatecalls?calls=" + calls,
 		dataType: "JSON",
 		async: true,
 		processData: false,
@@ -312,10 +312,10 @@ function updatecalls(calls){
 		}
 	});
 }
-function progress(i,prog) {
-	$("#p").attr('style', 'width: ' + (i+1)*prog + '%; color : red;');
-	
-	$("#pvalue").text((i+1)*prog+"%");
+function progress(i, prog) {
+	$("#p").attr('style', 'width: ' + (i + 1) * prog + '%; color : red;');
+
+	$("#pvalue").text((i + 1) * prog + "%");
 }
 
 function addinstdetails(form) {
@@ -357,9 +357,9 @@ function addinstdetails(form) {
 	});
 }
 
-function runcode(form,i,prog) {
+function runcode(form, i, prog) {
 	if (form.code != '' && form.token != '' && form.num != '') {
-		
+
 		return $.ajax({
 			type: 'POST',
 			url: "apex/runcode",
@@ -397,7 +397,7 @@ function runcode(form,i,prog) {
 			}
 		});
 	}
-	
+
 }
 
 function warnUser() {
@@ -573,7 +573,7 @@ $("#inst-update").click(function () {
 		"nameOfInstance": $("#nameOfInstance").val(),
 
 	};
-	
+
 	$.ajax({
 		type: 'POST',
 		url: "instancemanagement/updatebyid",
@@ -630,7 +630,7 @@ function viewcounter() {
 				$("#fc").text(data.totalcalls);
 				$("#sc").text(data.remainingcalls);
 				$("#tc").text(data.totalinst);
-				
+
 			}
 			else {
 				error("Problem occures during process");

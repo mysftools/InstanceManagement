@@ -83,7 +83,7 @@
 			<div class="modal-body">
 				<div class="row" style="padding-left: 10px;">
 					<div class="script1">
-					<div class="script"></div>
+						<div class="script"></div>
 					</div>
 				</div>
 			</div>

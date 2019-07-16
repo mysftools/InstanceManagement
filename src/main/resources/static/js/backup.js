@@ -2,7 +2,7 @@ jQuery(document).ready(function () {
 	$("#backupstatus").attr("checked", true);
 	loaddetails();
 	loadlist();
-	
+
 	if ($('#backupstatus').is(":checked")) {
 		$('#showinst').hide();
 	};
@@ -25,7 +25,7 @@ function loaddetails() {
 			});
 		},
 		success: function (data) {
-			
+
 			if (data.status) {
 				$("#totalcalls").text(data.totalcalls);
 				$("#remainingcalls").text(data.remainingcalls);
@@ -64,14 +64,14 @@ $("#backup-btn").click(function () {
 		backupall();
 	} else {
 		var form = {
-				"token": $("#my_multi_select").val(),
-			};
-		 backupselected(form);
+			"token": $("#my_multi_select").val(),
+		};
+		backupselected(form);
 	};
-	
+
 });
 
-function backupselected(form){
+function backupselected(form) {
 	$.ajax({
 		type: 'POST',
 		url: "backup/backupselected",
@@ -115,7 +115,7 @@ function backupselected(form){
 }
 
 
-function backupall(){
+function backupall() {
 	$.ajax({
 		type: 'POST',
 		url: "backup/backupall",
@@ -132,7 +132,7 @@ function backupall(){
 			});
 		},
 		success: function (data) {
-			
+
 			if (data.status) {
 				success(data.message);
 				App.unblockUI();
@@ -152,7 +152,7 @@ function backupall(){
 	});
 }
 
-function loadlist(){
+function loadlist() {
 	$.ajax({
 		type: 'POST',
 		url: "/instancemanagement/getlist",

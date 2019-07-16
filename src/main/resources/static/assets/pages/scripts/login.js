@@ -83,7 +83,7 @@ var Login = function () {
                 }
             },
 
-           
+
             invalidHandler: function (event, validator) { //display error alert on form submit   
 
             },
@@ -130,7 +130,7 @@ var Login = function () {
             jQuery('.register-form').hide();
         });
     }
-   
+
     var handleForgetPassword = function () {
         $('.forget-form').validate({
             errorElement: 'span', //default input error message container
@@ -186,16 +186,16 @@ var Login = function () {
             jQuery('.login-form').hide();
             jQuery('.forget-form').show();
         });
-       
-       
+
+
         jQuery('#back-btn').click(function () {
-        	 jQuery('.login-form').show();
+            jQuery('.login-form').show();
             $(".forget-form")[0].reset();
             $('.form-group').removeClass('has-error');
-			$(".help-block").html("");
+            $(".help-block").html("");
             jQuery('.forget-form').hide();
         });
-        
+
 
     }
     return {
@@ -204,7 +204,7 @@ var Login = function () {
             handleLogin();
             handleForgetPassword();
             handleRegister();
-           
+
         }
 
     };
@@ -212,15 +212,15 @@ var Login = function () {
 }();
 
 function postprocess() {
-	jQuery('.login-form').show();
+    jQuery('.login-form').show();
     $(".forget-form")[0].reset();
     $('.form-group').removeClass('has-error');
-	$(".help-block").html("");
+    $(".help-block").html("");
     jQuery('.forget-form').hide();
 }
 
 jQuery(document).ready(function () {
-	jQuery('.otp-form').hide();
+    jQuery('.otp-form').hide();
     Login.init();
 });
 
@@ -228,7 +228,7 @@ jQuery(document).ready(function () {
 $("#forget-pass-btn").click(function () {
 
     var form = {
-    		"email" : $("#email-r").val()
+        "email": $("#email-r").val()
     };
     if (form.email != "") {
         $.ajax({
@@ -284,7 +284,7 @@ $("#register-submit-btn").click(function () {
         "clientSecreat": $("#clientSecreat").val(),
         "calls": $("#calls").val()
     };
-   
+
     if (form.username != "" && form.password != "" && form.rpassword != "" && form.clientkey != "" && form.clientSecreat != "") {
         $.ajax({
             type: 'POST',

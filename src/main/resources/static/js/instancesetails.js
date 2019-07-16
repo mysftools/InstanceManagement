@@ -28,7 +28,7 @@ jQuery(document).ready(function () {
 			{
 				data: "id",
 				mRender: function (data, type, row) {
-					return '<div id="scripttr"><span style=" height:50px " onclick="getscript(' + "'" + row.detailToken + "'" + ')" >' + row.stript.replace(/\n/g, "<br />");   + '</span></div>';
+					return '<div id="scripttr"><span style=" height:50px " onclick="getscript(' + "'" + row.detailToken + "'" + ')" >' + row.stript.replace(/\n/g, "<br />"); + '</span></div>';
 				}
 			},
 			{
@@ -47,11 +47,11 @@ jQuery(document).ready(function () {
 	};
 });
 
-function getscript(token){
-	
+function getscript(token) {
+
 	$.ajax({
 		type: 'POST',
-		url: "instancedetails/getbyid?token="+token,
+		url: "instancedetails/getbyid?token=" + token,
 		dataType: "JSON",
 		async: true,
 		processData: false,
@@ -73,7 +73,7 @@ function getscript(token){
 				$('.script').empty()
 				$('.script').append(data.respons['stript'].replace(/\n/g, "<br />"));
 				$('#responsive').modal('show');
-				
+
 			} else if (!data.status) {
 				error("Problem occures during process");
 				App.unblockUI();
@@ -89,5 +89,5 @@ function getscript(token){
 			App.unblockUI();
 		}
 	});
-	
+
 }
