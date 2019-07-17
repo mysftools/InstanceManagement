@@ -17,6 +17,7 @@ public class InstanceRunDetailsMetaModel {
 	int id;
 	
 	String instToken;
+	String userToken;
 	String detailToken;
 	Date date;
 	String instname;
@@ -34,6 +35,12 @@ public class InstanceRunDetailsMetaModel {
 	}
 	public void setInstToken(String instToken) {
 		this.instToken = instToken;
+	}
+	public String getUserToken() {
+		return userToken;
+	}
+	public void setUserToken(String userToken) {
+		this.userToken = userToken;
 	}
 	public String getDetailToken() {
 		return detailToken;

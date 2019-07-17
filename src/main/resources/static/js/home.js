@@ -83,8 +83,8 @@ var Login = function () {
 
 	};
 }();
-jQuery(document).ready(function () {
 
+jQuery(document).ready(function () {
 	viewcounter();
 	Login.init();
 
@@ -100,58 +100,100 @@ jQuery(document).ready(function () {
 		$('#new_inst').modal('show');
 	});
 
-	table = $('#listMember').DataTable({
-		"processing": true, // Feature control the processing indicator.
-		"serverSide": false, // Feature control DataTables' server-side
-		// processing mode.
-		"order": [], // Initial no order.
-		"autoWidth": false,
-		"language": {
 
-			"zeroRecords": "Sorry, no results were found",
-			"infoEmpty": "No records available",
+	$.ajax({
+		type: 'POST',
+		url: "instancemanagement/getall",
+		dataType: "JSON",
+		async: false,
+		processData: false,
+		cache: false,
+		contentType: "application/json",
+		beforeSend: function () {
+
+			App.blockUI({
+				boxed: true,
+				message: "Please Wait..."
+			});
 		},
-		// Load data for the table's content from an Ajax source
-		"ajax": {
-			"url": "instancemanagement/getall",
-			"type": "POST",
-			"dataSrc": ''
-		},
-		//Set column definition initialisation properties.
+		success: function (obj) {
+			if (obj.status) {
+				var role = obj.role;
+				table = $('#listMember').DataTable({
+					data: obj.response,
+					"columns": [
+						{
+							data: "id",
+							mRender: function (data, type, row) {
+								var str;
+								if (role == 'admin') {
+									str = '<i style="radius= 50%; font-size: 20px; color: royalblue;" onclick="getinst(' + "'" + row.instToken + "'" + ')" class="fa fa-edit"></i>' +
+										'&nbsp &nbsp<i style="radius= 30%; font-size: 20px; color: red;" onclick="deleteUser(' + "'" + row.instToken + "'" + ')" class="fa fa-trash"></i>';
+								} else {
+									str = '<i style="radius= 50%; font-size: 20px; color: royalblue;" onclick="alertadmin()" class="fa fa-edit"></i>' +
+										'&nbsp &nbsp<i style="radius= 30%; font-size: 20px; color: red;" onclick="alertadmin()" class="fa fa-trash"></i>';
+								}
 
-		"columns": [
-			{
-				data: "id",
-				mRender: function (data, type, row) {
-					return '<i style="radius= 50%; font-size: 20px; color: royalblue;" onclick="getinst(' + "'" + row.instToken + "'" + ')" class="fa fa-edit"></i>' +
-						'&nbsp &nbsp<i style="radius= 30%; font-size: 20px; color: red;" onclick="deleteUser(' + "'" + row.instToken + "'" + ')" class="fa fa-trash"></i>';
+								return str;
 
-				}
-			},
-			{
-				data: "type"
-			},
-			{
-				data: "id",
-				mRender: function (data, type, row) {
-					return '<a  onclick="viewUser(' + "'" + row.instToken + "'" + ')" >' + "" + row.nameOfInstance + "" + '</a>';
-				}
-			},
+							}
+						},
+						{
+							data: "type"
+						},
+						{
+							data: "id",
+							mRender: function (data, type, row) {
+								var str;
+								if (role == 'admin') {
+									str = '<a  onclick="viewUser(' + "'" + row.instToken + "'" + ')" >' + "" + row.nameOfInstance + "" + '</a>';
+								} else {
+									str = '<a  onclick="alertadmin()" >' + "" + row.nameOfInstance + "" + '</a>';
+								}
+								return str;
+							}
+						},
 
-			{
-				data: "id",
-				mRender: function (data, type, row) {
-					var str;
-					str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
-						"onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
-						"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> Instance Details" +
-						"</button>"
+						{
+							data: "id",
+							mRender: function (data, type, row) {
+								var str;
+								if (role == 'admin') {
+									str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
+										"onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
+										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> Instance Details" +
+										"</button>";
+								} else {
+									str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
+										"onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
+										"</button>" + "<button disabled class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> Instance Details" +
+										"</button>";
+								}
 
-					return str;
-				}
+
+								return str;
+							}
+						}
+					]
+				});
+				App.unblockUI();
+			} else if (!obj.status) {
+				error("Problem occures during process");
+				App.unblockUI();
+			} else {
+				error("Problem occures during process");
+				list_refresh();
+				App.unblockUI();
 			}
-		]
-	});
+
+		},
+		error: function () {
+			list_refresh();
+			App.unblockUI();
+		}
+	}
+	);
+
 	list_refresh = function () {
 		table.ajax.reload(null, false);
 	};
@@ -163,8 +205,11 @@ jQuery(document).ready(function () {
 
 });
 
+function alertadmin() {
+	error("You are not allowed");
+}
 function showinstdetails(token) {
-	window.location.replace("/instancedetails?token=" + token);
+	window.location = "/instancedetails?token=" + token;
 }
 
 $("#inst").click(function () {
@@ -196,7 +241,6 @@ $("#inst").click(function () {
 				});
 			},
 			success: function (data) {
-
 				if (data.status) {
 					success(data.message);
 					list_refresh();
@@ -427,7 +471,7 @@ function getinst(token) {
 	$(".register-form")[0].reset();
 	$('.modal-title').text('Update Instance Details');
 	$('#new_inst').modal('show');
-	
+
 	var form = new FormData();
 	form.append("token", token);
 	$.ajax({

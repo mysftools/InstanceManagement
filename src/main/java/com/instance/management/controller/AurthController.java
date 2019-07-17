@@ -56,7 +56,7 @@ public class AurthController {
 				session = request.getSession();
 				session.setAttribute("username", usermodel.getUsername());
 				session.setAttribute("token", usermodel.getToken());
-
+				session.setAttribute("role", usermodel.getRole());
 				session.setAttribute("password", usermodel.getPassword());
 
 				usermodel.setAttempt(0);

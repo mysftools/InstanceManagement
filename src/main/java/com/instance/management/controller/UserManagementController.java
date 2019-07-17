@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.instance.management.model.ChangepwdModel;
+import com.instance.management.model.CompanyMetaModel;
 import com.instance.management.model.UserMetaModel;
 import com.instance.management.model.UserModel;
 import com.instance.management.model.UserUpdateModel;
+import com.instance.management.reposetory.CompanyReposetory;
 import com.instance.management.reposetory.UserReposetory;
 import com.instance.management.service.OtpSendService;
 import com.instance.management.system.RandomToken;
@@ -34,6 +36,9 @@ public class UserManagementController {
 
 	@Autowired
 	OtpSendService otpSendService;
+
+	@Autowired
+	CompanyReposetory companyReposetory;
 
 	@Autowired
 	RandomToken randomToken;
@@ -54,11 +59,13 @@ public class UserManagementController {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		if (userModel.getPassword().equals(userModel.getRpassword())) {
-
+			CompanyMetaModel companyMetaModel = companyReposetory.findBytoken(userModel.getCompanyId());
 			UserMetaModel userMetaModel = new UserMetaModel();
 			userMetaModel.setUsername(userModel.getUsername());
 			userMetaModel.setPassword(userModel.getPassword());
-
+			userMetaModel.setRole(userModel.getRole());
+			userMetaModel.setCompanyId(companyMetaModel.getToken());
+			userMetaModel.setCompanyName(companyMetaModel.getCompanyname());
 			userMetaModel.setCalls(userModel.getCalls());
 			userMetaModel.setRemainingCalls(userModel.getCalls());
 			userMetaModel.setToken(randomToken.getToken(10));
@@ -122,7 +129,8 @@ public class UserManagementController {
 	}
 
 	@PostMapping("/updatecalls")
-	public @ResponseBody Object updatecalls(@RequestParam int calls, HttpServletResponse response, HttpSession session) {
+	public @ResponseBody Object updatecalls(@RequestParam int calls, HttpServletResponse response,
+			HttpSession session) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			if (!LoginController.userValidate(session)) {

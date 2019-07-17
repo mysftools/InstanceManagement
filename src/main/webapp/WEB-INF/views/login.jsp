@@ -45,13 +45,14 @@
                 <button type="submit" class="btn green pull-right"> Login </button>
                 <br />
             </div>
+           
             <div class="forget-password">
                 <h4>Forgot your password ?</h4>
                 <p> no worries, click
                     <a href="javascript:;" id="forget-password"> here </a> to reset your password. </p>
             </div>
             <div class="create-account">
-                <p> Don't have an account yet ?&nbsp;
+                <p> Don't have an account yet ?&nbsp;<br />
                     <a href="javascript:;" id="register-btn"> Create an account </a>
                 </p>
             </div>
@@ -76,7 +77,7 @@
 
         <!-- END FORGOT PASSWORD FORM -->
         <!-- BEGIN REGISTRATION FORM -->
-        <form class="register-form">
+        <form class="register-form" id="reg" action="#">
             <h3>Sign Up</h3>
             <p> Enter your details below: </p>
             <div class="form-group">
@@ -111,15 +112,51 @@
                         id="calls" />
                 </div>
             </div>
+            <div class="form-group">
+                    <label class="control-label visible-ie8 visible-ie9">Country</label>
+                    <select name="company_list" id="company_list" class="select form-control">
+                        
+                    </select>
+                </div>
+                 <div class="form-group">
+                    <label class="control-label visible-ie8 visible-ie9">Country</label>
+                    <select name="role_list" id="role_list" class="select form-control">
+                        <option value="">---select role-- </option>
+                        <option value="admin">admin</option>
+                        <option value="developer">developer</option>
+                    </select>
+                </div>
             <div class="form-actions">
                 <button id="register-back-btn" type="button" class="btn grey-salsa btn-outline"> Back </button>
                 <button type="submit" id="register-submit-btn" class="btn green pull-right"> Sign Up </button>
+            </div>
+             <div class="">
+                <h4>Your company is not listed ?</h4>
+
+                <p>click <a  href="javascript:;" id="add-company"> here</a>
+                    to add your company.</p>
+            </div>
+        </form>
+        <form class="register-form" id="add-company-form" action="#">
+            <h3>Add company</h3>
+            <p> Enter your details below: </p>
+            <div class="form-group">
+
+                <div class="input-icon">
+                    <i class="fa fa-user"></i>
+                    <input class="form-control placeholder-no-fix" type="text" placeholder="Company Name" name="companyname"
+                        id="companyname" />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button id="company-back-btn" type="button" class="btn grey-salsa btn-outline"> Back </button>
+                <button type="submit" id="company-submit-btn" class="btn green pull-right">Add Company</button>
             </div>
         </form>
         <!-- END REGISTRATION FORM -->
     </div>
     <%@ include file="include/scripts.jsp" %>
-    <script src="/resources/assets/pages/scripts/login.js" type="text/javascript"></script>
+    <script src="resources/assets/pages/scripts/login.js" type="text/javascript"></script>
 </body>
 
 </html>

@@ -89,7 +89,7 @@
 			</div>
 
 			<div class="modal-footer">
-				<button type="button" data-dismiss="modal" class="btn dark btn-outline">Close</button>
+				<button type="button" data-dismiss="modal" class="btn dark btn-outline" id="closemodel">Close</button>
 			</div>
 		</div>
 	</div>

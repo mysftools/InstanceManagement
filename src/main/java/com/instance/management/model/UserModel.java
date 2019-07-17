@@ -8,6 +8,10 @@ public class UserModel {
 
 	String rpassword;
 
+	String companyId;
+
+	String role;
+	
 	int calls;
 
 	public String getUsername() {
@@ -32,6 +36,22 @@ public class UserModel {
 
 	public void setRpassword(String rpassword) {
 		this.rpassword = rpassword;
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public int getCalls() {

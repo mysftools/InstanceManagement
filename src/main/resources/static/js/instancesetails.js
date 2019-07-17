@@ -1,7 +1,6 @@
 jQuery(document).ready(function () {
 	$("#token").hide();
 	var t = $("#token").text();
-
 	table = $('#listinstdetails').DataTable({
 		"processing": true, // Feature control the processing indicator.
 		"serverSide": false, // Feature control DataTables' server-side
@@ -15,7 +14,7 @@ jQuery(document).ready(function () {
 		},
 		// Load data for the table's content from an Ajax source
 		"ajax": {
-			"url": "/instancedetails/get?token=" + t,
+			"url": "instancedetails/get?token=" + t,
 			"type": "POST",
 			"dataSrc": ''
 		},
@@ -65,11 +64,9 @@ function getscript(token) {
 		},
 		success: function (data) {
 			if (data.status) {
-				//success(data.message);
 				App.unblockUI();
-				//console.log(data.respons['stript']);
 				$('.title').text(data.respons['instname']);
-				$('.script').empty()
+				$('.script').empty();
 				$('.script').append(data.respons['stript'].replace(/\n/g, "<br />"));
 				$('#responsive').modal('show');
 
@@ -90,3 +87,7 @@ function getscript(token) {
 	});
 
 }
+
+$('#closemodel').click(function () {
+	$('.script').empty();
+});

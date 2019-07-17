@@ -1,6 +1,7 @@
 var Login = function () {
 
     var handleLogin = function () {
+    	 
         $('.login-form').validate({
             errorElement: 'span', //default input error message container
             errorClass: 'help-block', // default input error message class
@@ -60,7 +61,7 @@ var Login = function () {
     }
     var handleRegister = function () {
     	
-        $('.register-form').validate({
+        $('#reg').validate({
             errorElement: 'span', //default input error message container
             errorClass: 'help-block', // default input error message class
             focusInvalid: false, // do not focus the last invalid input
@@ -80,6 +81,84 @@ var Login = function () {
                     required: true
                 },
                 rpassword: {
+                    required: true
+                },
+                role_list: {
+                    required: true
+                },
+                company_list: {
+                    required: true
+                },
+                calls:{
+                	required: true
+                }
+            },
+
+
+            invalidHandler: function (event, validator) { //display error alert on form submit   
+
+            },
+
+            highlight: function (element) { // hightlight error inputs
+                $(element)
+                    .closest('.form-group').addClass('has-error'); // set error class to the control group
+            },
+
+            success: function (label) {
+                label.closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+
+            errorPlacement: function (error, element) {
+                if (element.closest('.input-icon').size() === 1) {
+                    error.insertAfter(element.closest('.input-icon'));
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+
+        $('#reg input').keypress(function (e) {
+            if (e.which == 13) {
+                if ($('#reg').validate().form()) {
+                    $('#reg').submit();
+                }
+                return false;
+            }
+        });
+
+        jQuery('#register-btn').click(function () {
+        	loadlist();
+        	$('title').text("Register");
+            jQuery('.login-form').hide();
+            jQuery('#reg').show();
+        });
+        jQuery('#register-back-btn').click(function () {
+        	$('title').text("Login");
+            jQuery('.login-form').show();
+            $('.form-group').removeClass('has-error');
+            $('.form-group span').html('');
+            $("#reg")[0].reset();
+            jQuery('#reg').hide();
+        });
+    }
+
+    
+    
+var handlecomapny = function () {
+    	
+        $('#add-company-form').validate({
+            errorElement: 'span', //default input error message container
+            errorClass: 'help-block', // default input error message class
+            focusInvalid: false, // do not focus the last invalid input
+            ignore: "",
+            rules: {
+
+            	companyname: {
                     required: true
                 }
             },
@@ -112,28 +191,33 @@ var Login = function () {
             }
         });
 
-        $('.register-form input').keypress(function (e) {
+        $('#add-company-form input').keypress(function (e) {
             if (e.which == 13) {
-                if ($('.register-form').validate().form()) {
-                    $('.register-form').submit();
+                if ($('#add-company-form').validate().form()) {
+                    $('#add-company-form').submit();
                 }
                 return false;
             }
         });
 
-        jQuery('#register-btn').click(function () {
+        jQuery('#add-company').click(function () {
         	$('title').text("Register");
-            jQuery('.login-form').hide();
-            jQuery('.register-form').show();
+            jQuery('#reg').hide();
+            jQuery('#add-company-form').show();
         });
-        jQuery('#register-back-btn').click(function () {
+        jQuery('#company-back-btn').click(function () {
         	$('title').text("Login");
-            jQuery('.login-form').show();
-            $(".register-form")[0].reset();
-            jQuery('.register-form').hide();
+            jQuery('#reg').show();
+            $("#add-company-form")[0].reset();
+            $('.form-group').removeClass('has-error');
+            $('.form-group span').html('');
+            jQuery('#add-company-form').hide();
         });
     }
-
+    
+    
+    
+    
     var handleForgetPassword = function () {
         $('.forget-form').validate({
             errorElement: 'span', //default input error message container
@@ -206,6 +290,7 @@ var Login = function () {
     return {
         //main function to initiate the module
         init: function () {
+        	handlecomapny();
             handleLogin();
             handleForgetPassword();
             handleRegister();
@@ -287,11 +372,13 @@ $("#register-submit-btn").click(function () {
         "password": $("#password").val(),
         "rpassword": $("#rpassword").val(),
         "clientkey": $("#clientkey").val(),
+        "companyId": $("#company_list").val(),
+        "role": $("#role_list").val(),
         "clientSecreat": $("#clientSecreat").val(),
         "calls": $("#calls").val()
     };
 
-    if (form.username != "" && form.password != "" && form.rpassword != "" && form.clientkey != "" && form.clientSecreat != "") {
+    if (form.username != "" && form.password != "" && form.rpassword != "" && form.clientkey != "" && form.clientSecreat != "" && form.role != ""&& form.companyId != "") {
         $.ajax({
             type: 'POST',
             url: "usermanagement/saveuser",
@@ -330,3 +417,93 @@ $("#register-submit-btn").click(function () {
         );
     };
 });
+
+
+$("#company-submit-btn").click(function () {
+
+    var form = {
+        "companyname": $("#companyname").val()
+    };
+    console.log(form);
+    if (form.companyname != "") {
+        $.ajax({
+            type: 'POST',
+            url: "company/add",
+            dataType: "JSON",
+            async: true,
+            data: JSON.stringify(form),
+            processData: false,
+            cache: false,
+            contentType: "application/json",
+            beforeSend: function () {
+
+                App.blockUI({
+                    boxed: true,
+                    message: "Please Wait..."
+                });
+            },
+            success: function (data) {
+
+                if (data.status) {
+                    success(data.message);
+
+                } else if (!data.status) {
+                    error("Problem occures during process");
+                    App.unblockUI();
+                } else {
+                    error("Problem occures during process");
+                    App.unblockUI();
+                }
+
+            },
+            error: function () {
+                error("Problem occures during process");
+                App.unblockUI();
+            }
+        }
+        );
+    };
+});
+
+
+function loadlist() {
+	$.ajax({
+		type: 'POST',
+		url: "/company/getall",
+		dataType: "JSON",
+		async: false,
+		processData: false,
+		cache: false,
+		contentType: "application/json",
+		beforeSend: function () {
+
+			App.blockUI({
+				boxed: true,
+				message: "Please Wait..."
+			});
+		},
+		success: function (data) {
+			var text = "<option value=''>---select company----</option>";
+			if (data.status) {
+				
+				for (var i = 0; i < data.response.length; i++) {
+					text = text + "<option value='" + data.response[i].token + "'>" + data.response[i].companyname + "</option>";
+				}
+				$('#company_list').empty();
+				$('#company_list').append(text);
+				App.unblockUI();
+			} else if (!data.status) {
+				error("Problem occures during process");
+				App.unblockUI();
+			} else {
+				error("Problem occures during process");
+				App.unblockUI();
+			}
+
+		},
+		error: function () {
+			error("Problem occures during process");
+			App.unblockUI();
+		}
+	});
+}

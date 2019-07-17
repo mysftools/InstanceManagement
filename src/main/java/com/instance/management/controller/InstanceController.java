@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.instance.management.model.InstanceMetaModel;
 import com.instance.management.model.InstanceModel;
 import com.instance.management.reposetory.InstanceReposetory;
+import com.instance.management.reposetory.InstanceRunDetailsReposetory;
 import com.instance.management.system.RandomToken;
 
 @Controller
@@ -27,6 +28,9 @@ public class InstanceController {
 
 	@Autowired
 	InstanceReposetory instanceReposetory;
+	
+	@Autowired
+	InstanceRunDetailsReposetory instanceRunDetailsReposetory; 
 
 	@Autowired
 	RandomToken randomToken;
@@ -48,8 +52,11 @@ public class InstanceController {
 			response.sendRedirect("/");
 			return null;
 		}
-
-		return instanceReposetory.findBytoken(session.getAttribute("token").toString());
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("role", session.getAttribute("role"));
+		map.put("status", true);
+		map.put("response", instanceReposetory.findBytoken(session.getAttribute("token").toString()));
+		return map;
 	}
 	
 	@PostMapping("/getlist")
@@ -123,6 +130,8 @@ public class InstanceController {
 			response.sendRedirect("/");
 			return null;
 		}
+		
+		instanceRunDetailsReposetory.deleteAll(instanceRunDetailsReposetory.findByinstToken(token));
 		InstanceMetaModel instanceMetaModel = instanceReposetory.findByinstToken(token);
 		if (instanceMetaModel != null) {
 			instanceReposetory.delete(instanceMetaModel);

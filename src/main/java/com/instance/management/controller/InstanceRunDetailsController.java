@@ -74,6 +74,7 @@ public class InstanceRunDetailsController {
 			InstanceMetaModel instanceMetaModel = instanceReposetory.findByinstToken(runDetailsModel.getToken());
 			InstanceRunDetailsMetaModel runDetailsMetaModel = new InstanceRunDetailsMetaModel();
 			runDetailsMetaModel.setInstToken(instanceMetaModel.getInstToken());
+			runDetailsMetaModel.setUserToken(session.getAttribute("token").toString());
 			runDetailsMetaModel.setInstname(instanceMetaModel.getNameOfInstance());
 			runDetailsMetaModel.setDate(new Date(System.currentTimeMillis()));
 			runDetailsMetaModel.setNoOfCalls(runDetailsModel.getNum());

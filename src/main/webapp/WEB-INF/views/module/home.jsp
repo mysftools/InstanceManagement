@@ -88,9 +88,10 @@
 										<div class="row">
 											<div class="col-md-6">
 												<div class="btn-group">
-													<a class="btn sbold green" id="new_user"> Add New <i
-															class="fa fa-plus"></i>
-													</a>
+													<button class="btn sbold green" id="new_user"
+														<% if(!session.getAttribute("role").equals("admin")){ %>
+														disabled="disabled" <%} %>> Add New <i class="fa fa-plus"></i>
+													</button>
 												</div>
 											</div>
 

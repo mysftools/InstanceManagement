@@ -19,7 +19,13 @@ public class UserMetaModel {
 	String token;
 
 	String password;
+	
+	String companyId;
 
+	String companyName;
+	
+	String role;
+	
 	int attempt;
 
 	boolean status;
@@ -28,20 +34,20 @@ public class UserMetaModel {
 
 	int remainingCalls;
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 	public int getId() {
 		return id;
 	}
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getToken() {
@@ -58,6 +64,30 @@ public class UserMetaModel {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public int getAttempt() {
@@ -92,4 +122,5 @@ public class UserMetaModel {
 		this.remainingCalls = remainingCalls;
 	}
 
+	
 }
