@@ -87,7 +87,7 @@ var Login = function () {
 jQuery(document).ready(function () {
 	viewcounter();
 	Login.init();
-
+	loadtable();
 	$("#new_user").click(function () {
 
 		$("#instence").show();
@@ -100,7 +100,10 @@ jQuery(document).ready(function () {
 		$('#new_inst').modal('show');
 	});
 
+	
+});
 
+function loadtable(){
 	$.ajax({
 		type: 'POST',
 		url: "instancemanagement/getall",
@@ -119,9 +122,9 @@ jQuery(document).ready(function () {
 		success: function (obj) {
 			if (obj.status) {
 				var role = obj.role;
-				table = $('#listMember').DataTable({
+			$('#listMember').DataTable({
 					data: obj.response,
-					"columns": [
+					columns: [
 						{
 							data: "id",
 							mRender: function (data, type, row) {
@@ -182,28 +185,19 @@ jQuery(document).ready(function () {
 				App.unblockUI();
 			} else {
 				error("Problem occures during process");
-				list_refresh();
+				
 				App.unblockUI();
 			}
 
 		},
 		error: function () {
-			list_refresh();
+			
 			App.unblockUI();
 		}
 	}
 	);
-
-	list_refresh = function () {
-		table.ajax.reload(null, false);
-	};
-	postProcess = function () {
-		$('#new_inst').modal('hide');
-		list_refresh();
-		App.unblockUI();
-	};
-
-});
+	
+}
 
 function alertadmin() {
 	error("You are not allowed");
@@ -243,20 +237,18 @@ $("#inst").click(function () {
 			success: function (data) {
 				if (data.status) {
 					success(data.message);
-					list_refresh();
-					postProcess();
 				} else if (!data.status) {
 					error("Problem occures during process");
 					App.unblockUI();
 				} else {
 					error("Problem occures during process");
-					list_refresh();
+					
 					App.unblockUI();
 				}
 
 			},
 			error: function () {
-				list_refresh();
+				
 				App.unblockUI();
 			}
 		}
@@ -339,7 +331,7 @@ function updatecalls(calls) {
 			if (data.status) {
 				//success("DONE");
 				App.unblockUI();
-				list_refresh();
+				
 			} else if (!data.status) {
 				error("Problem occures during process");
 				App.unblockUI();
@@ -383,7 +375,7 @@ function addinstdetails(form) {
 			if (data.status) {
 				//success("DONE");
 				App.unblockUI();
-				list_refresh();
+				
 			} else if (!data.status) {
 				error("Problem occures during process");
 				App.unblockUI();
@@ -424,7 +416,7 @@ function runcode(form, i, prog) {
 				if (data.status) {
 					success("DONE");
 					App.unblockUI();
-					list_refresh();
+					
 				} else if (!data.status) {
 					error("Problem occures during process");
 					App.unblockUI();
@@ -497,13 +489,13 @@ function getinst(token) {
 			}
 			else {
 				error("Problem occures during process");
-				postProcess();
+				
 			}
 		},
 		error: function () {
 			error("Problem occures during process");
 			App.unblockUI();
-			postProcess();
+			
 		}
 
 	});
@@ -550,10 +542,8 @@ var deleteuser = function (token) {
 		},
 		success: function (data) {
 			if (data.status) {
-				console.log(data);
 				success(data.message);
-				postProcess();
-
+				App.unblockUI();
 			}
 			else {
 				error("Problem occures during process");
@@ -634,7 +624,7 @@ $("#inst-update").click(function () {
 		success: function (data) {
 			if (data.status) {
 				success("Instance updated successfully");
-				postProcess();
+				App.unblockUI();
 			} else if (!data.status) {
 				$.each(data.errors, function (k, v) {
 					$("#" + k + "-e").addClass("has-error");
