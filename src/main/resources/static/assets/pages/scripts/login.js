@@ -59,6 +59,7 @@ var Login = function () {
         });
     }
     var handleRegister = function () {
+    	
         $('.register-form').validate({
             errorElement: 'span', //default input error message container
             errorClass: 'help-block', // default input error message class
@@ -121,10 +122,12 @@ var Login = function () {
         });
 
         jQuery('#register-btn').click(function () {
+        	$('title').text("Register");
             jQuery('.login-form').hide();
             jQuery('.register-form').show();
         });
         jQuery('#register-back-btn').click(function () {
+        	$('title').text("Login");
             jQuery('.login-form').show();
             $(".register-form")[0].reset();
             jQuery('.register-form').hide();
@@ -183,12 +186,14 @@ var Login = function () {
         });
 
         jQuery('#forget-password').click(function () {
+        	$('title').text("Forget Password");
             jQuery('.login-form').hide();
             jQuery('.forget-form').show();
         });
 
 
         jQuery('#back-btn').click(function () {
+        	$('title').text("Login");
             jQuery('.login-form').show();
             $(".forget-form")[0].reset();
             $('.form-group').removeClass('has-error');
@@ -220,6 +225,7 @@ function postprocess() {
 }
 
 jQuery(document).ready(function () {
+	$('title').text("Login");
     jQuery('.otp-form').hide();
     Login.init();
 });

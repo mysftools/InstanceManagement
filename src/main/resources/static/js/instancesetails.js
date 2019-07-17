@@ -1,6 +1,5 @@
 jQuery(document).ready(function () {
 	$("#token").hide();
-	console.log($("#token").text());
 	var t = $("#token").text();
 
 	table = $('#listinstdetails').DataTable({

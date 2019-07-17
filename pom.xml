@@ -12,11 +12,11 @@
 	<artifactId>TomcateTest</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>TomcateTest</name>
+	<name>InstanceManagemant</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
-		<start-class>com.instance.management.TomcateTestApplication</start-class>
+		<start-class>com.instance.management.InstanceManagemantApplication</start-class>
 		<java.version>1.8</java.version>
 	</properties>
 

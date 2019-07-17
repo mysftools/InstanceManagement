@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="ISO-8859-1">
-    <title>Insert title here</title>
+    <title>Login</title>
     <%@ include file="include/styles.jsp" %>
 </head>
 
