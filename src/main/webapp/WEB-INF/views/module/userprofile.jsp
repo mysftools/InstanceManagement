@@ -1,4 +1,3 @@
-
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
 	<!-- BEGIN CONTENT -->
@@ -39,8 +38,8 @@
 														Account</span>
 												</div>
 												<ul class="nav nav-tabs">
-													<li class="active"><a href="#tab_1_1"
-														data-toggle="tab">Personal Info</a></li>
+													<li class="active"><a href="#tab_1_1" data-toggle="tab">Personal
+															Info</a></li>
 													<li><a href="#tab_1_3" data-toggle="tab">Change
 															Password</a></li>
 
@@ -62,11 +61,28 @@
 																	type="text" placeholder="User Name" id="username"
 																	class="form-control" />
 															</div>
+															<div class="form-group">
+																<label class="control-label">Company Name</label> <input
+																	type="text" placeholder="User Name" id="companyname"
+																	class="form-control" disabled="disabled"/>
+															</div>
 															
+															<div class="form-group">
+																<label
+																	class="control-label visible-ie8 visible-ie9">Country</label>
+																<select name="role_list" id="role_list"
+																	class="select form-control" disabled="disabled">
+																	<option value="">---select role-- </option>
+																	<option value="admin">admin</option>
+																	<option value="developer">developer</option>
+																</select>
+															</div>
+
 															<div class="form-group">
 																<label class="control-label">Total number of
 																	calls</label> <input type="text" placeholder="calls"
-																	class="form-control" disabled="disabled" id="calls" />
+																	class="form-control" disabled="disabled"
+																	id="calls" />
 															</div>
 															<div class="margiv-top-10">
 																<a href="javascript:;" class="btn green"
@@ -80,20 +96,24 @@
 													<div class="tab-pane" id="tab_1_3">
 														<form action="#">
 															<div class="form-group">
-																<label class="control-label">Current Password</label> <input
-																	type="password" class="form-control" id="Password" />
+																<label class="control-label">Current Password</label>
+																<input type="password" class="form-control"
+																	id="Password" />
 															</div>
 															<div class="form-group">
 																<label class="control-label">New Password</label> <input
-																	type="password" class="form-control" id="npassword" />
+																	type="password" class="form-control"
+																	id="npassword" />
 															</div>
 															<div class="form-group">
 																<label class="control-label">Re-type New
-																	Password</label> <input type="password" class="form-control" id="cpassword"/>
+																	Password</label> <input type="password"
+																	class="form-control" id="cpassword" />
 															</div>
 															<div class="margin-top-10">
 																<a href="" class="btn green" id="changepass"> Change
-																	Password </a> <a href="" id="cancelpass" class="btn default" >
+																	Password </a> <a href="" id="cancelpass"
+																	class="btn default">
 																	Cancel </a>
 															</div>
 														</form>
@@ -118,8 +138,7 @@
 	</div>
 	<!-- END CONTENT -->
 	<!-- BEGIN QUICK SIDEBAR -->
-	<a href="javascript:;" class="page-quick-sidebar-toggler"> <i
-		class="icon-login"></i>
+	<a href="javascript:;" class="page-quick-sidebar-toggler"> <i class="icon-login"></i>
 	</a>
 
 	<!-- END QUICK SIDEBAR -->

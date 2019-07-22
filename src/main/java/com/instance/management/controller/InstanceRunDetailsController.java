@@ -40,10 +40,11 @@ public class InstanceRunDetailsController {
 	@GetMapping("")
 	public String index(@RequestParam String token, Model model, HttpServletResponse response, HttpSession session)
 			throws Exception {
-		/*
-		 * if (!LoginController.userValidate(session)) { response.sendRedirect("/");
-		 * return null; }
-		 */
+
+		if (!LoginController.userValidate(session)) {
+			response.sendRedirect("/");
+			return null;
+		}
 
 		model.addAttribute("page", "instancesetails");
 		model.addAttribute("token", token);
@@ -59,7 +60,7 @@ public class InstanceRunDetailsController {
 			return null;
 		}
 
-		return instanceRunDetailsReposetory.findByinstToken(token);
+		return instanceRunDetailsReposetory.findByinstTokenOrderByDateDesc(token);
 	}
 
 	@PostMapping("/add")
@@ -109,6 +110,6 @@ public class InstanceRunDetailsController {
 			map.put("message", "some error has bean occured");
 			return map;
 		}
-		
+
 	}
 }

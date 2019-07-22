@@ -10,6 +10,6 @@ import com.instance.management.model.InstanceRunDetailsMetaModel;
 @Repository
 public interface InstanceRunDetailsReposetory extends JpaRepository<InstanceRunDetailsMetaModel, Integer> {
 
-	List<InstanceRunDetailsMetaModel> findByinstToken(String token);
+	List<InstanceRunDetailsMetaModel> findByinstTokenOrderByDateDesc(String token);
 	InstanceRunDetailsMetaModel findBydetailToken(String token);
 }

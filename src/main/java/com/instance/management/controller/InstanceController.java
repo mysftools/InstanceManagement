@@ -131,7 +131,7 @@ public class InstanceController {
 			return null;
 		}
 		
-		instanceRunDetailsReposetory.deleteAll(instanceRunDetailsReposetory.findByinstToken(token));
+		instanceRunDetailsReposetory.deleteAll(instanceRunDetailsReposetory.findByinstTokenOrderByDateDesc(token));
 		InstanceMetaModel instanceMetaModel = instanceReposetory.findByinstToken(token);
 		if (instanceMetaModel != null) {
 			instanceReposetory.delete(instanceMetaModel);
@@ -139,7 +139,7 @@ public class InstanceController {
 			map.put("message", "Deleted successfully");
 			return map;
 		} else {
-			map.put("status", false);
+			map.put("status", false);	
 			map.put("message", "no data found");
 			return map;
 		}

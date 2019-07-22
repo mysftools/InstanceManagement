@@ -7,18 +7,17 @@ function getinst() {
         type: 'POST',
         url: "usermanagement/getuserbyid",
         dataType: "JSON",
-        async: true,
-
+        async: false,
         processData: false,
         cache: false,
         contentType: false,
         beforeSend: function () { },
         success: function (data) {
-
             if (data.status) {
                 $('[name=memberToken]').val(data.response['token']);
                 $('#username').val(data.response['username']);
-
+                $('#companyname').val(data.response['companyName']);
+                $('#role_list').val(data.response['role']);
                 $('#calls').val(data.response['calls']);
 
             }
@@ -33,6 +32,7 @@ function getinst() {
 
     });
 }
+
 
 $("#user-update").click(function () {
 
@@ -122,6 +122,9 @@ $("#changepass").click(function () {
     }
     );
 });
+
+
+
 
 $("#cancelpass").click(function () {
     $("#tab_1_1").show();
