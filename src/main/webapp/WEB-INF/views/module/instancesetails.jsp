@@ -22,50 +22,102 @@
 				<div class="page-content-inner">
 					<div class="row">
 						<div class="col-md-12">
-							<!-- BEGIN EXAMPLE TABLE PORTLET-->
 							<div class="portlet light ">
-								<div class="portlet-title">
-									<div class="caption font-dark">
-										<span class="caption-subject bold uppercase">Instance
-											Table</span>
+								<div class="portlet-body">
+									<ul class="nav nav-tabs">
+										<li class="active">
+											<a href="#tab_1_1" data-toggle="tab"> Run Details </a>
+										</li>
+										<li>
+											<a href="#tab_1_2" onclick="colspan()" data-toggle="tab"> Back Up Details
+											</a>
+										</li>
+
+									</ul>
+									<div class="tab-content">
+										<div class="tab-pane fade active in" id="tab_1_1">
+											<div class="portlet light ">
+												<div class="portlet-title">
+													<div class="caption font-dark">
+														<span class="caption-subject bold uppercase">Instance Run
+															Details</span>
+													</div>
+												</div>
+												<div class="portlet-body">
+													<table
+														class="table table-striped table-bordered table-hover table-checkable order-column"
+														id="listinstdetails">
+														<thead>
+															<tr>
+
+																<th>Instance Name</th>
+																<th>Script</th>
+																<th>Date</th>
+																<th>Total Runs</th>
+															</tr>
+														</thead>
+														<tbody>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+										<div class="tab-pane fade" id="tab_1_2">
+											<div class="portlet light ">
+												<div class="portlet-title">
+													<div class="caption font-dark">
+														<span class="caption-subject bold uppercase">Instance BackUp
+															History</span>
+													</div>
+												</div>
+												<div class="portlet-body">
+													<table
+														class="table table-striped table-bordered table-hover table-checkable order-column"
+														id="bachuphistory">
+														<thead>
+															<tr>
+
+																<th>Instance Name</th>
+																<th>Script</th>
+																<th>Date</th>
+
+															</tr>
+														</thead>
+														<tbody>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="clearfix margin-bottom-20"> </div>
+
+									<div class="tab-content">
+
+
+
 									</div>
 								</div>
-								<div class="portlet-body">
-									<table
-										class="table table-striped table-bordered table-hover table-checkable order-column"
-										id="listinstdetails">
-										<thead>
-											<tr>
-
-												<th>Instance Name</th>
-												<th>Script</th>
-												<th>Date</th>
-												<th>Total Runs</th>
-											</tr>
-										</thead>
-										<tbody>
-										</tbody>
-									</table>
-								</div>
 							</div>
-							<!-- END EXAMPLE TABLE PORTLET-->
+
+
 						</div>
 					</div>
+					<!-- END PAGE CONTENT INNER -->
 				</div>
-				<!-- END PAGE CONTENT INNER -->
 			</div>
+			<!-- END PAGE CONTENT BODY -->
+			<!-- END CONTENT BODY -->
 		</div>
-		<!-- END PAGE CONTENT BODY -->
-		<!-- END CONTENT BODY -->
+		<!-- END CONTENT -->
+		<!-- BEGIN QUICK SIDEBAR -->
+
+
+		<!-- END QUICK SIDEBAR -->
 	</div>
-	<!-- END CONTENT -->
-	<!-- BEGIN QUICK SIDEBAR -->
-
-
-	<!-- END QUICK SIDEBAR -->
+	<!-- END CONTAINER -->
 </div>
-<!-- END CONTAINER -->
-
 
 
 <div id="responsive" class="modal fade" tabindex="-1" aria-hidden="true">

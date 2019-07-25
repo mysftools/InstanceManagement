@@ -18,9 +18,11 @@ public class InstanceMetaModel implements Serializable {
 	int id;
 
 	String securityCode;
+	
+	String coustomerName;
 
-	String type;
-
+	boolean isSandbox;
+	
 	String token;
 	
 	String instToken;
@@ -30,6 +32,10 @@ public class InstanceMetaModel implements Serializable {
 	String clientkey;
 
 	String clientSecreat;
+	
+	String password;
+
+	String username;
 
 	public int getId() {
 		return id;
@@ -47,12 +53,20 @@ public class InstanceMetaModel implements Serializable {
 		this.securityCode = securityCode;
 	}
 
-	public String getType() {
-		return type;
+	public String getCoustomerName() {
+		return coustomerName;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setCoustomerName(String coustomerName) {
+		this.coustomerName = coustomerName;
+	}
+
+	public boolean isSandbox() {
+		return isSandbox;
+	}
+
+	public void setSandbox(boolean isSandbox) {
+		this.isSandbox = isSandbox;
 	}
 
 	public String getToken() {
@@ -93,5 +107,21 @@ public class InstanceMetaModel implements Serializable {
 
 	public void setClientSecreat(String clientSecreat) {
 		this.clientSecreat = clientSecreat;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }

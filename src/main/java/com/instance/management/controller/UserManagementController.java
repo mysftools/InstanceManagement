@@ -3,7 +3,6 @@ package com.instance.management.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -18,11 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.instance.management.model.ChangepwdModel;
-import com.instance.management.model.CompanyMetaModel;
 import com.instance.management.model.UserMetaModel;
 import com.instance.management.model.UserModel;
 import com.instance.management.model.UserUpdateModel;
-import com.instance.management.reposetory.CompanyReposetory;
 import com.instance.management.reposetory.UserReposetory;
 import com.instance.management.service.OtpSendService;
 import com.instance.management.system.RandomToken;
@@ -38,9 +35,6 @@ public class UserManagementController {
 	OtpSendService otpSendService;
 
 	@Autowired
-	CompanyReposetory companyReposetory;
-
-	@Autowired
 	RandomToken randomToken;
 
 	@GetMapping("")
@@ -54,25 +48,36 @@ public class UserManagementController {
 	}
 
 	@PostMapping("/saveuser")
-	public @ResponseBody Object add(@RequestBody UserModel userModel, HttpServletResponse response,
-			HttpServletRequest httpServletRequest, HttpSession session) throws Exception {
+	public @ResponseBody Object add(@RequestBody UserModel userModel,HttpSession session,Model model) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		if (userModel.getPassword().equals(userModel.getRpassword())) {
-			CompanyMetaModel companyMetaModel = companyReposetory.findBytoken(userModel.getCompanyId());
+
 			UserMetaModel userMetaModel = new UserMetaModel();
 			userMetaModel.setUsername(userModel.getUsername());
+			userMetaModel.setStatus(false);
+			userMetaModel.setOtpstatus(false);
 			userMetaModel.setPassword(userModel.getPassword());
 			userMetaModel.setRole(userModel.getRole());
-			userMetaModel.setCompanyId(companyMetaModel.getToken());
-			userMetaModel.setCompanyName(companyMetaModel.getCompanyname());
+			userMetaModel.setCompanyName(userModel.getCompanyId());	
 			userMetaModel.setCalls(userModel.getCalls());
 			userMetaModel.setRemainingCalls(userModel.getCalls());
 			userMetaModel.setToken(randomToken.getToken(10));
-			userrepo.save(userMetaModel);
-			map.put("status", true);
-			map.put("code", 200);
-			return map;
+			
+			if (Boolean.parseBoolean(otpSendService.sendotp(userModel.getUsername()).get("status").toString())) {
+				userrepo.save(userMetaModel);
+				model.addAttribute("email", userModel.getUsername());
+				map.put("status", true);
+				map.put("code", 200);
+				map.put("message", "user added");
+				return map;
+			}else {
+				map.put("status", false);
+				map.put("code", 400);
+				map.put("message", "user not added");
+				return map;
+			}
+			
 		} else {
 			map.put("status", false);
 			map.put("code", 400);
@@ -187,7 +192,7 @@ public class UserManagementController {
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			return otpSendService.sendOtp(email.get("email"));
+			return otpSendService.sendpass(email.get("email"));
 		} catch (Exception e) {
 			map.put("status", false);
 			map.put("message", "something went wrong");

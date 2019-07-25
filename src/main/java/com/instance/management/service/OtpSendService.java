@@ -1,6 +1,7 @@
 package com.instance.management.service;
 
 import java.io.FileReader;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -19,9 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 
+import com.instance.management.model.OtpModel;
 import com.instance.management.model.UserMetaModel;
+import com.instance.management.reposetory.OtpRepository;
 import com.instance.management.reposetory.UserReposetory;
 import com.instance.management.system.DirPath;
+import com.instance.management.system.RandomToken;
 import com.instance.management.system.TwoWayPasswordManagement;
 
 @Service
@@ -29,10 +33,67 @@ public class OtpSendService {
 
 	@Autowired
 	UserReposetory userReposetory;
+	
+	@Autowired
+	OtpRepository otpRepository;
 
 	TwoWayPasswordManagement twoWayPasswordManagement = new TwoWayPasswordManagement();
+	
+	@Autowired
+	RandomToken randomToken;
+	
+	public Map<String, Object> sendotp(String usermail){
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		try {
+			
+			OtpModel otpModel = new OtpModel();
+			String otp=randomToken.getNumaricOtp(6);
+			otpModel.setTempPassword(otp);
+			otpModel.setSendTime(new Date(System.currentTimeMillis()));
+			otpModel.setUsername(usermail);
+			
+			if(Boolean.parseBoolean(sendmail(usermail, otp, "Here is Your OTP").get("status").toString())) {
+				otpRepository.save(otpModel);
+				map1.put("status", true);
+				map1.put("message", "otp bean send to your email");
+				return map1;
+			}else {
+				map1.put("status", false);
+				map1.put("message", "some error has bean accoured");
+				return map1;
+			}
+			
+			
+		} catch (Exception e) {
+			map1.put("status", false);
+			map1.put("message", "some error has bean accoured");
+			return map1;
+		}
+		
+		
+	}
 
-	public Object sendOtp(String usermail) throws Exception {
+	public Map<String, Object> sendpass(String usermail) throws Exception {
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		try {
+			UserMetaModel userMetaModel=userReposetory.findByusername(usermail);
+			userMetaModel.setStatus(true);
+			userMetaModel.setOtpstatus(true);
+			userReposetory.save(userMetaModel);
+			sendmail(usermail, userMetaModel.getPassword(), "Here is Your Password");
+			
+			map1.put("status", true);
+			map1.put("message", "password has bean send to your email");
+			return map1;
+		} catch (Exception e) {
+			map1.put("status", false);
+			map1.put("message", "some error has bean accoured");
+			return map1;
+		}
+		
+	}
+
+	private Map<String, Object> sendmail(String usermail,String body,String sub)  throws Exception {
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		try {
 
@@ -44,7 +105,7 @@ public class OtpSendService {
 			map = yaml.load(fileReader);
 
 			String email = map.get("email").toString();
-			String pas = twoWayPasswordManagement.decry(map.get("emailpassword").toString());
+			String pas = twoWayPasswordManagement.decrypt(map.get("emailpassword").toString());
 
 			Properties props = System.getProperties();
 			props.put("mail.smtp.host", map.get("host").toString());
@@ -58,14 +119,11 @@ public class OtpSendService {
 
 			message.setRecipients(Message.RecipientType.TO, usermail);
 
-			message.setSubject("Here is Your Password");
+			message.setSubject(sub);
 
 			BodyPart messageBodyPart = new MimeBodyPart();
-			UserMetaModel userMetaModel=userReposetory.findByusername(usermail);
-			String otp = userMetaModel.getPassword();
-			userMetaModel.setStatus(true);
-			userReposetory.save(userMetaModel);
-			messageBodyPart.setText(otp);
+			
+			messageBodyPart.setText(body);
 
 			Multipart multipart = new MimeMultipart();
 
@@ -80,11 +138,11 @@ public class OtpSendService {
 			map1.put("message", "password has bean send to your email");
 			return map1;
 		} catch (Exception e) {
+			e.printStackTrace();
 			map1.put("status", false);
 			map1.put("message", "some error has bean accoured");
 			return map1;
 		}
 		
 	}
-
 }

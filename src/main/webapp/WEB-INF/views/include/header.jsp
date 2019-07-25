@@ -42,8 +42,8 @@
 							<span></span>
 						</a></li>
 						<% if( session.getAttribute("role").equals("admin")){ %>
-					<li class="menu-dropdown mega-menu-dropdown backup "><a href="/backup">Back Up<span></span>
-						</a></li>
+				<!-- 	<li class="menu-dropdown mega-menu-dropdown backup "><a href="/backup">Back Up<span></span>
+						</a></li> -->
 						<% } %>
 					<li class="menu-dropdown mega-menu-dropdown userprofile "><a href="/usermanagement">User
 							Profile<span></span>

@@ -8,7 +8,15 @@ var Login = function () {
 			focusInvalid: false, // do not focus the last invalid input
 			ignore: "",
 			rules: {
-
+				nameOfCoustomer: {
+					required: true
+				},
+				username: {
+					required: true
+				},
+				password: {
+					required: true
+				},
 				securityCode: {
 					required: true
 				},
@@ -33,12 +41,20 @@ var Login = function () {
 
 			},
 
-			invalidHandler: function (event, validator) { // display error alert on form submit
+			invalidHandler: function (event, validator) { // display error
+															// alert on form
+															// submit
 
 			},
 
 			highlight: function (element) { // hightlight error inputs
-				$(element).closest('.form-group').addClass('has-error'); // set error class to the control group
+				$(element).closest('.form-group').addClass('has-error'); // set
+																			// error
+																			// class
+																			// to
+																			// the
+																			// control
+																			// group
 			},
 
 			success: function (label) {
@@ -142,7 +158,15 @@ function loadtable(){
 							}
 						},
 						{
-							data: "type"
+							data: "id",
+							mRender: function (data, type, row) {
+								var type=row.sandbox;
+								if (type) {
+									return 'Sand Box';
+								}else {
+									return 'Production';
+								}
+							}
 						},
 						{
 							data: "id",
@@ -164,12 +188,14 @@ function loadtable(){
 								if (role == 'admin') {
 									str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
 										"onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
-										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> Instance Details" +
+										"</button>"+ "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=backup('" + row.instToken + "')> BackUp" +
+										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> <i class='fa fa-history'></i>" +
 										"</button>";
 								} else {
 									str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
 										"onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
-										"</button>" + "<button disabled class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> Instance Details" +
+										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=alertadmin()> BackUp" +
+										"</button>"+ "<button  class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> <i class='fa fa-history'></i>" +
 										"</button>";
 								}
 
@@ -206,13 +232,22 @@ function showinstdetails(token) {
 	window.location = "/instancedetails?token=" + token;
 }
 
+
+function backup(token){
+	$('[name=uid]').val(token);
+	$("#back-up").modal('show');
+}
+
 $("#inst").click(function () {
 
 	var form = {
+			"coustomerName": $("#nameOfCoustomer").val(),
 		"nameOfInstance": $("#nameOfInstance").val(),
 		"type": $("#select").val(),
 		"clientkey": $("#clientkey").val(),
 		"clientSecreat": $("#clientSecreat").val(),
+		"username": $("#username").val(),
+		"password": $("#password").val(),
 		"securityCode": $("#securityCode").val()
 	};
 
@@ -307,7 +342,7 @@ $("#inst-run").click(function () {
 		};
 		updatecalls(d);
 		addinstdetails(form);
-		//postProcess();
+		// postProcess();
 	};
 
 });
@@ -330,7 +365,7 @@ function updatecalls(calls) {
 		success: function (data) {
 			viewcounter();
 			if (data.status) {
-				//success("DONE");
+				// success("DONE");
 				App.unblockUI();
 				
 			} else if (!data.status) {
@@ -482,10 +517,18 @@ function getinst(token) {
 			if (data.status) {
 				$('[name=uid]').val(data.response['instToken']);
 				$('#securityCode').val(data.response['securityCode']);
-				$('#select').val(data.response['type']);
+				var t=data.response['sandbox'];
+				if (t) {
+					$('#select').val('true');
+				} else {
+					$('#select').val('false');
+				}
+				$('#nameOfCoustomer').val(data.response['coustomerName']);
 				$('#clientkey').val(data.response['clientkey']);
 				$('#clientSecreat').val(data.response['clientSecreat']);
 				$('#nameOfInstance').val(data.response['nameOfInstance']);
+				$('#username').val(data.response['username']);
+				$('#password').val(data.response['password']);
 
 			}
 			else {
@@ -577,11 +620,12 @@ function viewUser(token) {
 		success: function (data) {
 
 			if (data.status) {
-				$('#viewtoken').text(data.response['token']);
+				console.log(data);
+				$('#viewtoken').text(data.response['coustomerName']);
 				$('#securityCode1').text(data.response['securityCode']);
-				$('#type').text(data.response['type']);
+				$('#type').text(data.response['sandbox']);
 				$('#instToken').text(data.response['instToken']);
-
+				$('#username1').text(data.response['username']);
 				$('#nameOfInstanced').text(data.response['nameOfInstance']);
 			}
 			else {
@@ -600,6 +644,7 @@ $("#inst-update").click(function () {
 
 	var form = {
 		"instToken": $("[name=uid]").val(),
+		"coustomerName": $("#nameOfCoustomer").val(),
 		"securityCode": $("#securityCode").val(),
 		"type": $("#select").val(),
 		"clientkey": $("#clientkey").val(),
@@ -679,7 +724,51 @@ function viewcounter() {
 	});
 
 }
+$('#backup-btn').on("click", function() {
 
+	var tdata =$('[name=uid]').val();
+	var file = $('#filepath').val();
+	if (file != "") {
+		var form = $('.backup-form')[0];
+		// Create an FormData object 
+		var data = new FormData(form);
+console.log(form)
+		$.ajax({
+			type : "POST",
+			enctype: 'multipart/form-data',
+			url : "backup/takesingilebackup",
+			data: data,
+			processData : false,
+			contentType : false,
+			cache : false,
+			beforeSend : function() {
+				App.blockUI({
+					boxed : true,
+					message : "Please Wait..."
+				});
+			},
+			success : function(data) {
+				if (data.status) {
+					success(data.message);
+					$('.backup-form')[0].reset();
+					App.unblockUI();
+				} else {
+					error(data.message);
+					$('.backup-form')[0].reset();
+					App.unblockUI();
+				}
+			},
+			error : function() {
+				$('.backup-form')[0].reset();
+			}
+		});
+	} else {
+		if (file == "") {
+			$('#filepath-required').removeClass("hide");
+			$('#filepath-required').addClass("show");
+		}
+	}
+});
 function postprocess(){
 	viewcounter();
 	sleep(1000);

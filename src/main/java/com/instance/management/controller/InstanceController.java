@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.instance.management.model.InstanceMetaModel;
 import com.instance.management.model.InstanceModel;
+import com.instance.management.model.InstanceUpdateModel;
 import com.instance.management.reposetory.InstanceReposetory;
 import com.instance.management.reposetory.InstanceRunDetailsReposetory;
 import com.instance.management.system.RandomToken;
@@ -28,9 +29,9 @@ public class InstanceController {
 
 	@Autowired
 	InstanceReposetory instanceReposetory;
-	
+
 	@Autowired
-	InstanceRunDetailsReposetory instanceRunDetailsReposetory; 
+	InstanceRunDetailsReposetory instanceRunDetailsReposetory;
 
 	@Autowired
 	RandomToken randomToken;
@@ -52,17 +53,17 @@ public class InstanceController {
 			response.sendRedirect("/");
 			return null;
 		}
-		Map<String, Object> map=new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("role", session.getAttribute("role"));
 		map.put("status", true);
 		map.put("response", instanceReposetory.findBytoken(session.getAttribute("token").toString()));
 		return map;
 	}
-	
+
 	@PostMapping("/getlist")
 	public @ResponseBody Object testuser(HttpServletResponse response, HttpSession session) throws Exception {
-		
-		Map<String, Object> map=new HashMap<String, Object>();
+
+		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			if (!LoginController.userValidate(session)) {
 				response.sendRedirect("/");
@@ -76,7 +77,7 @@ public class InstanceController {
 			map.put("message", "some error has bean occured");
 			return map;
 		}
-		
+
 	}
 
 	@PostMapping("/add")
@@ -90,9 +91,10 @@ public class InstanceController {
 		instanceMetaModel.setToken(session.getAttribute("token").toString());
 		instanceMetaModel.setNameOfInstance(instanceModel.getNameOfInstance());
 		instanceMetaModel.setSecurityCode(instanceModel.getSecurityCode());
-		instanceMetaModel.setType(instanceModel.getType());
+		instanceMetaModel.setSandbox(Boolean.parseBoolean(instanceModel.getType()));
 		instanceMetaModel.setInstToken(randomToken.getToken(10));
 		instanceMetaModel.setClientkey(instanceModel.getClientkey());
+		instanceMetaModel.setCoustomerName(instanceModel.getCoustomerName());
 		instanceMetaModel.setClientSecreat(instanceModel.getClientSecreat());
 		instanceReposetory.save(instanceMetaModel);
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -130,7 +132,7 @@ public class InstanceController {
 			response.sendRedirect("/");
 			return null;
 		}
-		
+
 		instanceRunDetailsReposetory.deleteAll(instanceRunDetailsReposetory.findByinstTokenOrderByDateDesc(token));
 		InstanceMetaModel instanceMetaModel = instanceReposetory.findByinstToken(token);
 		if (instanceMetaModel != null) {
@@ -139,14 +141,14 @@ public class InstanceController {
 			map.put("message", "Deleted successfully");
 			return map;
 		} else {
-			map.put("status", false);	
+			map.put("status", false);
 			map.put("message", "no data found");
 			return map;
 		}
 	}
 
 	@PostMapping("/updatebyid")
-	public @ResponseBody Object update(@RequestBody InstanceMetaModel instanceMetaModel, HttpServletResponse response,
+	public @ResponseBody Object update(@RequestBody InstanceUpdateModel instanceMetaModel, HttpServletResponse response,
 			HttpSession session) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (!LoginController.userValidate(session)) {
@@ -159,7 +161,7 @@ public class InstanceController {
 			instanceMetaModel1.setInstToken(instanceMetaModel.getInstToken());
 			instanceMetaModel1.setNameOfInstance(instanceMetaModel.getNameOfInstance());
 			instanceMetaModel1.setSecurityCode(instanceMetaModel.getSecurityCode());
-			instanceMetaModel1.setType(instanceMetaModel.getType());
+			instanceMetaModel1.setSandbox(Boolean.parseBoolean(instanceMetaModel.getIsSandbox()));
 			instanceMetaModel1.setClientkey(instanceMetaModel.getClientkey());
 			instanceMetaModel1.setClientSecreat(instanceMetaModel.getClientSecreat());
 			instanceReposetory.save(instanceMetaModel1);

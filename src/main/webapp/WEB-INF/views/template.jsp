@@ -30,12 +30,7 @@
 			$('.${page}').addClass('active');
 
 		});
-		<% if(session.getAttribute("role").equals("admin")){ %>
-		
-			$("tr #runscript").attr("disabled", "disabled");
-		<% } else{%>
-			$("#runscript").attr("disabled", false);
-		<% }%>
+
 	</script>
 	<script src="resources/assets/pages/scripts/components-multi-select.js" type="text/javascript"></script>
 

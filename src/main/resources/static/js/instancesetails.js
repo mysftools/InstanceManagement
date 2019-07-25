@@ -1,6 +1,7 @@
 jQuery(document).ready(function () {
 	$("#token").hide();
 	var t = $("#token").text();
+	
 	table = $('#listinstdetails').DataTable({
 		"processing": true, // Feature control the processing indicator.
 		"serverSide": false, // Feature control DataTables' server-side
@@ -40,8 +41,49 @@ jQuery(document).ready(function () {
 			}
 		]
 	});
+	
+
+
+	table1 =$('#bachuphistory').DataTable({
+		"processing": true, // Feature control the processing indicator.
+		"serverSide": false, // Feature control DataTables' server-side
+		// processing mode.
+		"order": [], // Initial no order.
+		"autoWidth": false,
+		"language": {
+
+			"zeroRecords": "Sorry, no results were found",
+			"infoEmpty": "No records available",
+		},
+		// Load data for the table's content from an Ajax source
+		"ajax": {
+			"url": "backup/backuphistory",
+			"type": "POST",
+			"dataSrc": ''
+		},
+		//Set column definition initialisation properties.
+		"columns": [
+			{
+				data: "username"
+			},
+			{
+				data: "nameOfInstance"
+			},
+			
+			{
+				data: "id",
+					mRender: function (data, type, row) {
+						return row.backuptime.split(".")[0];
+					}
+			}
+		]
+	});
+	//colspan();
+	
+	
 	list_refresh = function () {
 		table.ajax.reload(null, false);
+		table1.ajax.reload(null, false);
 	};
 });
 
@@ -91,3 +133,11 @@ function getscript(token) {
 $('#closemodel').click(function () {
 	$('.script').empty();
 });
+
+
+function colspan(){
+	if($('#bachuphistory tbody tr td').hasClass("dataTables_empty")){
+		$('#bachuphistory tbody tr td').attr('colspan','3');
+	}
+	
+}

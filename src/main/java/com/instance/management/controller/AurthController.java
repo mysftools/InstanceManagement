@@ -51,7 +51,7 @@ public class AurthController {
 		UserMetaModel usermodel = userrepo.findByusername(username);
 		try {
 
-			if (usermodel.getUsername().equals(username) && usermodel.getPassword().equals(password)) {
+			if (usermodel.getUsername().equals(username) && usermodel.getPassword().equals(password)&&usermodel.getStatus()&&usermodel.isOtpstatus()) {
 
 				session = request.getSession();
 				session.setAttribute("username", usermodel.getUsername());
@@ -69,7 +69,11 @@ public class AurthController {
 					response.sendRedirect("/");
 					return null;
 				}
-
+				if (!usermodel.isOtpstatus()) {
+					error = "Your account has been blocked";
+					response.sendRedirect("/");
+					return null;
+				}
 				usermodel.setAttempt(usermodel.getAttempt() + 1);
 				userrepo.save(usermodel);
 				if (usermodel.getAttempt() >= 3) {

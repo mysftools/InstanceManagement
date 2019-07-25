@@ -1,10 +1,14 @@
 package com.instance.management.model;
 
-public class InstanceModel {
+public class InstanceUpdateModel {
 
 	String securityCode;
 
-	String type;
+	String isSandbox;
+
+	String token;
+
+	String instToken;
 
 	String nameOfInstance;
 
@@ -15,8 +19,6 @@ public class InstanceModel {
 	String password;
 
 	String username;
-	
-	String coustomerName;
 
 	public String getSecurityCode() {
 		return securityCode;
@@ -26,12 +28,28 @@ public class InstanceModel {
 		this.securityCode = securityCode;
 	}
 
-	public String getType() {
-		return type;
+	public String getIsSandbox() {
+		return isSandbox;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setIsSandbox(String isSandbox) {
+		this.isSandbox = isSandbox;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getInstToken() {
+		return instToken;
+	}
+
+	public void setInstToken(String instToken) {
+		this.instToken = instToken;
 	}
 
 	public String getNameOfInstance() {
@@ -72,14 +90,6 @@ public class InstanceModel {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getCoustomerName() {
-		return coustomerName;
-	}
-
-	public void setCoustomerName(String coustomerName) {
-		this.coustomerName = coustomerName;
 	}
 
 }

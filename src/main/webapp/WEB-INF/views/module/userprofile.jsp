@@ -64,9 +64,9 @@
 															<div class="form-group">
 																<label class="control-label">Company Name</label> <input
 																	type="text" placeholder="User Name" id="companyname"
-																	class="form-control" disabled="disabled"/>
+																	class="form-control" disabled="disabled" />
 															</div>
-															
+
 															<div class="form-group">
 																<label
 																	class="control-label visible-ie8 visible-ie9">Country</label>

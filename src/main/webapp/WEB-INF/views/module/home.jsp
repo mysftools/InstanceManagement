@@ -146,32 +146,46 @@
 					<input name="uid" type="hidden" id="uid" value="" />
 					<div id="instence">
 						<div class="form-group">
-							<label>Security Code</label> <input class="form-control placeholder-no-fix" type="text"
-								autocomplete="off" placeholder="SecurityCode" name="securityCode" id="securityCode" />
+							<input class="form-control placeholder-no-fix" type="text" autocomplete="off"
+								placeholder="nameOfCoustomer" name="nameOfCoustomer" id="nameOfCoustomer" />
+						</div>
+						<div class="form-group" id="nameOfInstance1">
+							<input class="form-control placeholder-no-fix" type="text" autocomplete="off"
+								placeholder="nameOfInstance" name="nameOfInstance" id="nameOfInstance" />
+						</div>
+						<div class="form-group">
+							<input class="form-control placeholder-no-fix" type="text" autocomplete="off"
+								placeholder="UserName" name="username" id="username" />
+
+						</div>
+						<div class="form-group">
+							<input class="form-control placeholder-no-fix" type="password" autocomplete="off"
+								placeholder="Passsword" name="password" id="password" />
+
+						</div>
+						<div class="form-group">
+							<input class="form-control placeholder-no-fix" type="text" autocomplete="off"
+								placeholder="SecurityCode" name="securityCode" id="securityCode" />
 
 						</div>
 
 						<div class="form-group">
-							<label>Type</label> <select class="form-control" name="select" id="select">
+							<select class="form-control" name="select" id="select">
 								<option value="">---Select---</option>
-								<option value="Sand Box">Sand Box</option>
-								<option value="Production">Production</option>
+								<option value="true">Sand Box</option>
+								<option value="false">Production</option>
 
 							</select>
 						</div>
-						<div class="form-group" id="nameOfInstance1">
-							<label>Name Of Instance</label> <input class="form-control placeholder-no-fix" type="text"
-								autocomplete="off" placeholder="nameOfInstance" name="nameOfInstance"
-								id="nameOfInstance" />
-						</div>
+
 						<div class="form-group">
-							<label>Client Key</label> <input class="form-control placeholder-no-fix" type="text"
-								placeholder="clientKey" name="clientkey" id="clientkey" />
+							<input class="form-control placeholder-no-fix" type="text" placeholder="clientKey"
+								name="clientkey" id="clientkey" />
 
 						</div>
 						<div class="form-group">
-							<label>Client Secreat</label> <input class="form-control placeholder-no-fix" type="text"
-								placeholder="clientSecreat" name="clientSecreat" id="clientSecreat" />
+							<input class="form-control placeholder-no-fix" type="text" placeholder="clientSecreat"
+								name="clientSecreat" id="clientSecreat" />
 
 						</div>
 					</div>
@@ -187,13 +201,13 @@
 						</table>
 						<br />
 						<div class="form-group">
-							<label>Apex</label>
+
 							<textarea class="form-control placeholder-no-fix" style="height: 116px;" autocomplete="off"
 								placeholder="Write apex code" name="apex" id="apex"></textarea>
 						</div>
 						<div class="form-group">
-							<label>NO of calls</label> <input class="form-control placeholder-no-fix" type="number"
-								autocomplete="off" placeholder="Enter any number" name="call" id="call" />
+							<input class="form-control placeholder-no-fix" type="number" autocomplete="off"
+								placeholder="Enter any number" name="call" id="call" />
 						</div>
 						<div>
 							<div class="progress-info" id="show-api-call">
@@ -224,6 +238,37 @@
 </div>
 
 
+<div class="modal fade draggable-modal" id="back-up" tabindex="-1" role="basic" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+
+				<h4 class="modal-title">Start Dragging Here</h4>
+			</div>
+			<div class="modal-body">
+				<form class="backup-form" enctype="multipart/form-data" action="#">
+					<input name="uid" type="hidden" id="uid" value="" />
+					<div class="form-group">
+						<input type="file" class="form-control" name="filepath" id="filepath" accept=".xml">
+						<span id="filepath-required" style="color:red" class="hide">Select XML File </span>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn dark btn-outline" data-dismiss="modal"
+							id="cancle">Close</button>
+						<button type="submit" class="btn green" id="backup-btn">Save</button>
+					</div>
+				</form>
+			</div>
+
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+
+
+
 
 
 <div id="viewinst" class="modal fade" tabindex="-1" aria-hidden="true">
@@ -242,9 +287,15 @@
 							<table style="width: 70%">
 
 								<tr>
-									<th>User id</th>
+									<th>Customer Name</th>
 									<td>
 										<div id="viewtoken"></div>
+									</td>
+								</tr>
+								<tr>
+									<th>User Name</th>
+									<td>
+										<div id="username1"></div>
 									</td>
 								</tr>
 								<tr>
@@ -260,7 +311,7 @@
 									</td>
 								</tr>
 								<tr>
-									<th>Type</th>
+									<th>SandBox</th>
 									<td>
 										<div id="type"></div>
 									</td>

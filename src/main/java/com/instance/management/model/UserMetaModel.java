@@ -20,7 +20,7 @@ public class UserMetaModel {
 
 	String password;
 	
-	String companyId;
+	boolean Otpstatus;
 
 	String companyName;
 	
@@ -66,12 +66,12 @@ public class UserMetaModel {
 		this.password = password;
 	}
 
-	public String getCompanyId() {
-		return companyId;
+	public boolean isOtpstatus() {
+		return Otpstatus;
 	}
 
-	public void setCompanyId(String companyId) {
-		this.companyId = companyId;
+	public void setOtpstatus(boolean otpstatus) {
+		Otpstatus = otpstatus;
 	}
 
 	public String getCompanyName() {
