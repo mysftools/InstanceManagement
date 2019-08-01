@@ -62,6 +62,11 @@
 																	class="form-control" />
 															</div>
 															<div class="form-group">
+																<label class="control-label">User ID</label> <input
+																	type="text" placeholder="User ID" id="userid"
+																	class="form-control" />
+															</div>
+															<div class="form-group">
 																<label class="control-label">Company Name</label> <input
 																	type="text" placeholder="User Name" id="companyname"
 																	class="form-control" disabled="disabled" />

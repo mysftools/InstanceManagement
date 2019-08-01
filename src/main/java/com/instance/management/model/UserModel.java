@@ -12,6 +12,8 @@ public class UserModel {
 
 	String role;
 	
+	String userid;
+	
 	int calls;
 
 	public String getUsername() {
@@ -60,6 +62,14 @@ public class UserModel {
 
 	public void setCalls(int calls) {
 		this.calls = calls;
+	}
+
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
 
 }

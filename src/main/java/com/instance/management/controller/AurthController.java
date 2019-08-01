@@ -48,15 +48,17 @@ public class AurthController {
 	@PostMapping(value = "/authenticate")
 	public @ResponseBody Object auth(HttpServletResponse response, HttpServletRequest request, HttpSession session,
 			@RequestParam String username, @RequestParam String password) throws Exception {
-		UserMetaModel usermodel = userrepo.findByusername(username);
+		UserMetaModel usermodel = userrepo.findByuserid(username);
 		try {
 
-			if (usermodel.getUsername().equals(username) && usermodel.getPassword().equals(password)&&usermodel.getStatus()&&usermodel.isOtpstatus()) {
+			if (usermodel.getUserid().equals(username) && usermodel.getPassword().equals(password)&&usermodel.getStatus()&&usermodel.isOtpstatus()) {
 
 				session = request.getSession();
+				session.setAttribute("userid", usermodel.getUserid());
 				session.setAttribute("username", usermodel.getUsername());
 				session.setAttribute("token", usermodel.getToken());
 				session.setAttribute("role", usermodel.getRole());
+				session.setAttribute("company", usermodel.getCompanyName());
 				session.setAttribute("password", usermodel.getPassword());
 
 				usermodel.setAttempt(0);

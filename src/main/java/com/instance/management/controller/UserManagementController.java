@@ -48,36 +48,38 @@ public class UserManagementController {
 	}
 
 	@PostMapping("/saveuser")
-	public @ResponseBody Object add(@RequestBody UserModel userModel,HttpSession session,Model model) throws Exception {
+	public @ResponseBody Object add(@RequestBody UserModel userModel, HttpSession session, Model model)
+			throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		if (userModel.getPassword().equals(userModel.getRpassword())) {
 
 			UserMetaModel userMetaModel = new UserMetaModel();
 			userMetaModel.setUsername(userModel.getUsername());
+			userMetaModel.setUserid(userModel.getUserid());
 			userMetaModel.setStatus(false);
 			userMetaModel.setOtpstatus(false);
 			userMetaModel.setPassword(userModel.getPassword());
 			userMetaModel.setRole(userModel.getRole());
-			userMetaModel.setCompanyName(userModel.getCompanyId());	
+			userMetaModel.setCompanyName(userModel.getCompanyId().toUpperCase());
 			userMetaModel.setCalls(userModel.getCalls());
 			userMetaModel.setRemainingCalls(userModel.getCalls());
 			userMetaModel.setToken(randomToken.getToken(10));
-			
-			if (Boolean.parseBoolean(otpSendService.sendotp(userModel.getUsername()).get("status").toString())) {
+
+			if (Boolean.parseBoolean(otpSendService.sendotp(userModel.getUserid()).get("status").toString())) {
 				userrepo.save(userMetaModel);
-				model.addAttribute("email", userModel.getUsername());
+				model.addAttribute("email", userModel.getUserid());
 				map.put("status", true);
 				map.put("code", 200);
 				map.put("message", "user added");
 				return map;
-			}else {
+			} else {
 				map.put("status", false);
 				map.put("code", 400);
 				map.put("message", "user not added");
 				return map;
 			}
-			
+
 		} else {
 			map.put("status", false);
 			map.put("code", 400);
@@ -107,8 +109,38 @@ public class UserManagementController {
 
 	}
 
+	@PostMapping("/getbyid")
+	public @ResponseBody Object getuser(@RequestParam String token, HttpServletResponse response, HttpSession session)
+			throws Exception {
+		if (!LoginController.userValidate(session)) {
+			response.sendRedirect("/");
+			return null;
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		UserMetaModel userMetaModel = userrepo.findBytoken(token);
+		if (userMetaModel != null) {
+			map.put("status", true);
+			map.put("response", userMetaModel);
+			return map;
+		} else {
+			map.put("status", false);
+			map.put("message", "no data found");
+			return map;
+		}
+
+	}
+
+	@PostMapping("/adminuser")
+	public @ResponseBody Object getalladminusers(HttpSession session, HttpServletResponse response) throws Exception {
+		if (!LoginController.userValidate(session)) {
+			response.sendRedirect("/");
+			return null;
+		}
+		return userrepo.findByCompanyNameAndRole(session.getAttribute("company").toString(), "developer");
+	}
+
 	@PostMapping("/update")
-	public @ResponseBody Object update(@RequestBody UserUpdateModel metaModel, HttpServletResponse response,
+	public @ResponseBody Object update(@RequestBody UserUpdateModel updateModel, HttpServletResponse response,
 			HttpSession session) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (!LoginController.userValidate(session)) {
@@ -116,10 +148,11 @@ public class UserManagementController {
 			return null;
 		}
 
-		UserMetaModel userMetaModel = userrepo.findBytoken(metaModel.getToken());
+		UserMetaModel userMetaModel = userrepo.findBytoken(updateModel.getToken());
 		if (userMetaModel != null) {
-
-			userMetaModel.setUsername(metaModel.getUsername());
+			userMetaModel.setUserid(updateModel.getUserid());
+			userMetaModel.setUsername(updateModel.getUsername());
+			userMetaModel.setCompanyName(updateModel.getCompanyname());
 			userrepo.save(userMetaModel);
 			map.put("status", true);
 			map.put("response", userMetaModel);
@@ -200,4 +233,51 @@ public class UserManagementController {
 		}
 
 	}
+
+	@PostMapping("/upstatus")
+	@ResponseBody
+	public Object UpStatus(@RequestParam String token, UserUpdateModel model, HttpServletResponse response,
+			HttpSession session) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			if (!LoginController.userValidate(session)) {
+				response.sendRedirect("/");
+				return null;
+			}
+			UserMetaModel usermodel = userrepo.findBytoken(token);
+			usermodel.setStatus(!usermodel.getStatus());
+			usermodel.setOtpstatus(!usermodel.isOtpstatus());
+			userrepo.save(usermodel);
+			map.put("status", true);
+			map.put("message", "status Updated successfully");
+			return map;
+		} catch (Exception e) {
+			map.put("status", false);
+			map.put("message", "some error has bean accured");
+			return map;
+		}
+	}
+
+	@PostMapping("/deletebyid")
+	@ResponseBody
+	public Object deleteUserById(@RequestParam String token, HttpServletResponse response, HttpSession session) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			if (!LoginController.userValidate(session)) {
+				response.sendRedirect("/");
+				return null;
+			}
+
+			UserMetaModel usermodel = userrepo.findBytoken(token);
+			userrepo.delete(usermodel);
+			map.put("status", true);
+			map.put("message", "User deleted successfully");
+			return map;
+		} catch (Exception e) {
+			map.put("status", false);
+			map.put("message", "some error has bean accured");
+			return map;
+		}
+	}
+
 }

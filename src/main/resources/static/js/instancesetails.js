@@ -1,7 +1,7 @@
 jQuery(document).ready(function () {
 	$("#token").hide();
 	var t = $("#token").text();
-	
+
 	table = $('#listinstdetails').DataTable({
 		"processing": true, // Feature control the processing indicator.
 		"serverSide": false, // Feature control DataTables' server-side
@@ -41,10 +41,10 @@ jQuery(document).ready(function () {
 			}
 		]
 	});
-	
 
 
-	table1 =$('#bachuphistory').DataTable({
+
+	table1 = $('#bachuphistory').DataTable({
 		"processing": true, // Feature control the processing indicator.
 		"serverSide": false, // Feature control DataTables' server-side
 		// processing mode.
@@ -69,18 +69,18 @@ jQuery(document).ready(function () {
 			{
 				data: "nameOfInstance"
 			},
-			
+
 			{
 				data: "id",
-					mRender: function (data, type, row) {
-						return row.backuptime.split(".")[0];
-					}
+				mRender: function (data, type, row) {
+					return row.backuptime.split(".")[0];
+				}
 			}
 		]
 	});
 	//colspan();
-	
-	
+
+
 	list_refresh = function () {
 		table.ajax.reload(null, false);
 		table1.ajax.reload(null, false);
@@ -135,9 +135,9 @@ $('#closemodel').click(function () {
 });
 
 
-function colspan(){
-	if($('#bachuphistory tbody tr td').hasClass("dataTables_empty")){
-		$('#bachuphistory tbody tr td').attr('colspan','3');
+function colspan() {
+	if ($('#bachuphistory tbody tr td').hasClass("dataTables_empty")) {
+		$('#bachuphistory tbody tr td').attr('colspan', '3');
 	}
-	
+
 }

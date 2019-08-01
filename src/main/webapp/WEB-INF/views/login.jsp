@@ -75,15 +75,23 @@
         </form>
         <!-- END FORGOT PASSWORD FORM -->
         <!-- BEGIN REGISTRATION FORM -->
-        <form class="register-form" id="reg" action="otp" method="post">
+        <form class="register-form" id="reg" action="otp" method="get">
             <h3>Sign Up</h3>
             <p> Enter your details below: </p>
             <div class="form-group">
 
                 <div class="input-icon">
                     <i class="fa fa-user"></i>
-                    <input class="form-control placeholder-no-fix" type="text" placeholder="User Id" name="username"
-                        id="username" />
+                    <input class="form-control placeholder-no-fix" type="text" placeholder="Name of User"
+                        name="username" id="username" />
+                </div>
+            </div>
+            <div class="form-group">
+
+                <div class="input-icon">
+                    <i class="fa fa-user"></i>
+                    <input class="form-control placeholder-no-fix" type="text" placeholder="User Id" name="userid"
+                        id="userid" />
                 </div>
             </div>
             <div class="form-group">
@@ -102,14 +110,6 @@
                             placeholder="Re-type Your Password" name="rpassword" id="rpassword" /> </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <div class="input-icon">
-                    <i class="fa fa-exchange"></i>
-                    <input class="form-control placeholder-no-fix" type="number" placeholder="no of calls" name="calls"
-                        id="calls" />
-                </div>
-            </div>
             <div class="form-group">
                 <div class="input-icon">
                     <i class="fa fa-contao"></i>
@@ -118,12 +118,11 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label visible-ie8 visible-ie9">Country</label>
-                <select name="role_list" id="role_list" class="select form-control">
-                    <option value="">---select role-- </option>
-                    <option value="admin">admin</option>
-                    <option value="developer">developer</option>
-                </select>
+                <div class="input-icon">
+
+                    <input class="form-control placeholder-no-fix" type="hidden" placeholder="company name"
+                        name="role_list" id="role_list" value="admin" disabled="disabled" />
+                </div>
             </div>
             <div class="form-actions">
                 <button id="register-back-btn" type="button" class="btn grey-salsa btn-outline"> Back </button>

@@ -74,8 +74,13 @@ public class BackupController {
 
 	@PostMapping("/takesingilebackup")
 	@ResponseBody
-	public Object takesingleBackup(@RequestParam("filepath") MultipartFile filepath, String uid, HttpSession session)
+	public Object takesingleBackup(@RequestParam("filepath") MultipartFile filepath,@RequestParam String uid,  HttpServletResponse response,HttpSession session)
 			throws Exception {
+		if (!LoginController.userValidate(session)) {
+			response.sendRedirect("/");
+			return null;
+		}
+
 		BackUpMetaModel backUpMetaModel = new BackUpMetaModel();
 		backUpMetaModel.setInstanceid(uid);
 		backUpMetaModel.setUsername(session.getAttribute("username").toString());
@@ -88,16 +93,19 @@ public class BackupController {
 		Files.copy(filepath.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 		backUpService.single(file.getAbsolutePath(), uid);
 		backUpReposetory.save(backUpMetaModel);
-		Map<String, Object> response = new HashMap<>();
-		response.put("status", true);
-		response.put("message", "File Uploaded Successfully");
-		return response;
+		Map<String, Object> response1 = new HashMap<>();
+		response1.put("status", true);
+		response1.put("message", "File Uploaded Successfully");
+		return response1;
 	}
 
 	@PostMapping("/backuphistory")
 	@ResponseBody
-	public Object backuphistory(HttpSession session) {
-		
+	public Object backuphistory(HttpSession session,HttpServletResponse response)throws Exception {
+		if (!LoginController.userValidate(session)) {
+			response.sendRedirect("/");
+			return null;
+		}
 		return backUpReposetory.findByuserid(session.getAttribute("token").toString());
 	}
 	
@@ -137,7 +145,10 @@ public class BackupController {
 	public @ResponseBody Object getinstanceinfo(HttpServletResponse response, HttpSession session) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-
+			if (!LoginController.userValidate(session)) {
+				response.sendRedirect("/");
+				return null;
+			}
 			UserMetaModel userMetaModel = userrepo.findBytoken(session.getAttribute("token").toString());
 			List<InstanceMetaModel> instanceMetaModels = instanceReposetory
 					.findBytoken(session.getAttribute("token").toString());

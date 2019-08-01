@@ -19,6 +19,7 @@ function getinst() {
                 $('#companyname').val(data.response['companyName']);
                 $('#role_list').val(data.response['role']);
                 $('#calls').val(data.response['calls']);
+                $('#userid').val(data.response['userid']);
 
             }
             else {
@@ -39,7 +40,8 @@ $("#user-update").click(function () {
     var form = {
         "token": $("#token").val(),
         "username": $("#username").val(),
-        "calls": $("calls").val,
+        "companyname": $("companyname").val,
+        "userid": $("userid").val,
     };
 
     $.ajax({

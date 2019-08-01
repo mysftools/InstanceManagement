@@ -42,19 +42,13 @@ var Login = function () {
 			},
 
 			invalidHandler: function (event, validator) { // display error
-															// alert on form
-															// submit
+				// alert on form
+				// submit
 
 			},
 
 			highlight: function (element) { // hightlight error inputs
-				$(element).closest('.form-group').addClass('has-error'); // set
-																			// error
-																			// class
-																			// to
-																			// the
-																			// control
-																			// group
+				$(element).closest('.form-group').addClass('has-error');
 			},
 
 			success: function (label) {
@@ -116,10 +110,10 @@ jQuery(document).ready(function () {
 		$('#new_inst').modal('show');
 	});
 
-	
+
 });
 
-function loadtable(){
+function loadtable() {
 	$.ajax({
 		type: 'POST',
 		url: "instancemanagement/getall",
@@ -138,7 +132,7 @@ function loadtable(){
 		success: function (obj) {
 			if (obj.status) {
 				var role = obj.role;
-			$('#listMember').DataTable({
+				$('#listMember').DataTable({
 					data: obj.response,
 					columns: [
 						{
@@ -160,10 +154,10 @@ function loadtable(){
 						{
 							data: "id",
 							mRender: function (data, type, row) {
-								var type=row.sandbox;
+								var type = row.sandbox;
 								if (type) {
 									return 'Sand Box';
-								}else {
+								} else {
 									return 'Production';
 								}
 							}
@@ -188,14 +182,14 @@ function loadtable(){
 								if (role == 'admin') {
 									str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
 										"onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
-										"</button>"+ "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=backup('" + row.instToken + "')> BackUp" +
+										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=backup('" + row.instToken + "')> BackUp" +
 										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> <i class='fa fa-history'></i>" +
 										"</button>";
 								} else {
 									str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
 										"onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
 										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=alertadmin()> BackUp" +
-										"</button>"+ "<button  class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> <i class='fa fa-history'></i>" +
+										"</button>" + "<button  class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> <i class='fa fa-history'></i>" +
 										"</button>";
 								}
 
@@ -211,18 +205,18 @@ function loadtable(){
 				App.unblockUI();
 			} else {
 				error("Problem occures during process");
-				
+
 				App.unblockUI();
 			}
 
 		},
 		error: function () {
-			
+
 			App.unblockUI();
 		}
 	}
 	);
-	
+
 }
 
 function alertadmin() {
@@ -233,7 +227,7 @@ function showinstdetails(token) {
 }
 
 
-function backup(token){
+function backup(token) {
 	$('[name=uid]').val(token);
 	$("#back-up").modal('show');
 }
@@ -241,7 +235,7 @@ function backup(token){
 $("#inst").click(function () {
 
 	var form = {
-			"coustomerName": $("#nameOfCoustomer").val(),
+		"coustomerName": $("#nameOfCoustomer").val(),
 		"nameOfInstance": $("#nameOfInstance").val(),
 		"type": $("#select").val(),
 		"clientkey": $("#clientkey").val(),
@@ -278,13 +272,13 @@ $("#inst").click(function () {
 					App.unblockUI();
 				} else {
 					error("Problem occures during process");
-					
+
 					App.unblockUI();
 				}
 
 			},
 			error: function () {
-				
+
 				App.unblockUI();
 			}
 		}
@@ -367,7 +361,7 @@ function updatecalls(calls) {
 			if (data.status) {
 				// success("DONE");
 				App.unblockUI();
-				
+
 			} else if (!data.status) {
 				error("Problem occures during process");
 				App.unblockUI();
@@ -517,7 +511,7 @@ function getinst(token) {
 			if (data.status) {
 				$('[name=uid]').val(data.response['instToken']);
 				$('#securityCode').val(data.response['securityCode']);
-				var t=data.response['sandbox'];
+				var t = data.response['sandbox'];
 				if (t) {
 					$('#select').val('true');
 				} else {
@@ -533,13 +527,13 @@ function getinst(token) {
 			}
 			else {
 				error("Problem occures during process");
-				
+
 			}
 		},
 		error: function () {
 			error("Problem occures during process");
 			App.unblockUI();
-			
+
 		}
 
 	});
@@ -724,30 +718,30 @@ function viewcounter() {
 	});
 
 }
-$('#backup-btn').on("click", function() {
+$('#backup-btn').on("click", function () {
 
-	var tdata =$('[name=uid]').val();
+	var tdata = $('[name=uid]').val();
 	var file = $('#filepath').val();
 	if (file != "") {
 		var form = $('.backup-form')[0];
 		// Create an FormData object 
 		var data = new FormData(form);
-console.log(form)
+		console.log(form)
 		$.ajax({
-			type : "POST",
+			type: "POST",
 			enctype: 'multipart/form-data',
-			url : "backup/takesingilebackup",
+			url: "backup/takesingilebackup",
 			data: data,
-			processData : false,
-			contentType : false,
-			cache : false,
-			beforeSend : function() {
+			processData: false,
+			contentType: false,
+			cache: false,
+			beforeSend: function () {
 				App.blockUI({
-					boxed : true,
-					message : "Please Wait..."
+					boxed: true,
+					message: "Please Wait..."
 				});
 			},
-			success : function(data) {
+			success: function (data) {
 				if (data.status) {
 					success(data.message);
 					$('.backup-form')[0].reset();
@@ -758,7 +752,7 @@ console.log(form)
 					App.unblockUI();
 				}
 			},
-			error : function() {
+			error: function () {
 				$('.backup-form')[0].reset();
 			}
 		});
@@ -769,17 +763,17 @@ console.log(form)
 		}
 	}
 });
-function postprocess(){
+function postprocess() {
 	viewcounter();
 	sleep(1000);
 	location.reload();
 }
 
 function sleep(milliseconds) {
-	  var start = new Date().getTime();
-	  for (var i = 0; i < 1e7; i++) {
-	    if ((new Date().getTime() - start) > milliseconds){
-	      break;
-	    }
-	  }
+	var start = new Date().getTime();
+	for (var i = 0; i < 1e7; i++) {
+		if ((new Date().getTime() - start) > milliseconds) {
+			break;
+		}
 	}
+}

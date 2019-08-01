@@ -1,7 +1,7 @@
 var Login = function () {
 
     var handleLogin = function () {
-    	 
+
         $('.login-form').validate({
             errorElement: 'span', //default input error message container
             errorClass: 'help-block', // default input error message class
@@ -12,9 +12,6 @@ var Login = function () {
                 },
                 password: {
                     required: true
-                },
-                remember: {
-                    required: false
                 }
             },
 
@@ -60,7 +57,7 @@ var Login = function () {
         });
     }
     var handleRegister = function () {
-    	
+
         $('#reg').validate({
             errorElement: 'span', //default input error message container
             errorClass: 'help-block', // default input error message class
@@ -74,12 +71,7 @@ var Login = function () {
                 password: {
                     required: true
                 },
-                clientkey: {
-                    required: true
-                },
-                clientSecreat: {
-                    required: true
-                },
+
                 rpassword: {
                     required: true
                 },
@@ -89,8 +81,9 @@ var Login = function () {
                 company_list: {
                     required: true
                 },
-                calls:{
-                	required: true
+                userid: {
+                    required: true,
+                    email: true
                 }
             },
 
@@ -132,13 +125,13 @@ var Login = function () {
         });
 
         jQuery('#register-btn').click(function () {
-        	
-        	$('title').text("Register");
+
+            $('title').text("Register");
             jQuery('.login-form').hide();
             jQuery('#reg').show();
         });
         jQuery('#register-back-btn').click(function () {
-        	$('title').text("Login");
+            $('title').text("Login");
             jQuery('.login-form').show();
             $('.form-group').removeClass('has-error');
             $('.form-group span').html('');
@@ -199,14 +192,14 @@ var Login = function () {
         });
 
         jQuery('#forget-password').click(function () {
-        	$('title').text("Forget Password");
+            $('title').text("Forget Password");
             jQuery('.login-form').hide();
             jQuery('#forget-form-email').show();
         });
 
 
         jQuery('#back-btn').click(function () {
-        	$('title').text("Login");
+            $('title').text("Login");
             jQuery('.login-form').show();
             $("#forget-form-email")[0].reset();
             $('.form-group').removeClass('has-error');
@@ -214,7 +207,7 @@ var Login = function () {
             jQuery('#forget-form-email').hide();
         });
     }
-    
+
     return {
         //main function to initiate the module
         init: function () {
@@ -237,7 +230,7 @@ function postprocess() {
 }
 
 jQuery(document).ready(function () {
-	$('title').text("Login");
+    $('title').text("Login");
     jQuery('.otp-form').hide();
     Login.init();
 });
@@ -293,20 +286,17 @@ $("#forget-pass-btn").click(function () {
 
 
 $("#register-submit-btn").click(function () {
-
     var form = {
         "username": $("#username").val(),
+        "userid": $("#userid").val(),
         "password": $("#password").val(),
         "rpassword": $("#rpassword").val(),
-        "clientkey": $("#clientkey").val(),
         "companyId": $("#company_list").val(),
-        "role": $("#role_list").val(),
-        "clientSecreat": $("#clientSecreat").val(),
-        "calls": $("#calls").val()
+        "role": $("#role_list").val()
     };
-
-    if (form.username != "" && form.password != "" && form.rpassword != "" && form.clientkey != "" && form.clientSecreat != "" && form.role != ""&& form.companyId != "") {
+    if (form.username != "" && form.password != "" && form.rpassword != "" && form.role != "" && form.companyId != "") {
         $.ajax({
+
             type: 'POST',
             url: "usermanagement/saveuser",
             dataType: "JSON",
@@ -316,18 +306,15 @@ $("#register-submit-btn").click(function () {
             cache: false,
             contentType: "application/json",
             beforeSend: function () {
-
                 App.blockUI({
                     boxed: true,
                     message: "Please Wait..."
                 });
             },
             success: function (data) {
-
                 if (data.status) {
-                  // showinstdetails();
                     success(data.message);
-                    
+                    App.unblockUI();
                 } else if (!data.status) {
                     error("Problem occures during process");
                     App.unblockUI();
@@ -342,8 +329,10 @@ $("#register-submit-btn").click(function () {
                 App.unblockUI();
             }
         });
+    } else {
+
+        error("Problem occures during process");
+        App.unblockUI();
     };
+
 });
-function showinstdetails() {
-	window.location = "/otp";
-}

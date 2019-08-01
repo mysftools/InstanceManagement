@@ -16,6 +16,8 @@ public class UserMetaModel {
 
 	String username;
 
+	String userid;
+	
 	String token;
 
 	String password;
@@ -120,6 +122,14 @@ public class UserMetaModel {
 
 	public void setRemainingCalls(int remainingCalls) {
 		this.remainingCalls = remainingCalls;
+	}
+
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
 
 	

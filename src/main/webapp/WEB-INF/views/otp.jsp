@@ -21,7 +21,7 @@
 
         <!-- END LOGIN FORM -->
         <!-- BEGIN FORGOT PASSWORD FORM -->
-        <form class="login-form" action="/" id="otp-form" method="get">
+        <form class="login-form" action="/otp/verify" id="otp-form" method="post">
             <h3>Verify Email</h3>
             <span>${error}</span>
             <p> Enter the otp received in your mail </p>

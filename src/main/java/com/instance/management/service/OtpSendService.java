@@ -15,6 +15,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,67 +34,86 @@ public class OtpSendService {
 
 	@Autowired
 	UserReposetory userReposetory;
-	
+
 	@Autowired
 	OtpRepository otpRepository;
 
 	TwoWayPasswordManagement twoWayPasswordManagement = new TwoWayPasswordManagement();
-	
+
 	@Autowired
 	RandomToken randomToken;
-	
-	public Map<String, Object> sendotp(String usermail){
+
+	public Map<String, Object> sendotp(String usermail) {
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		try {
-			
+
 			OtpModel otpModel = new OtpModel();
-			String otp=randomToken.getNumaricOtp(6);
+			String otp = randomToken.getNumaricOtp(6);
 			otpModel.setTempPassword(otp);
 			otpModel.setSendTime(new Date(System.currentTimeMillis()));
 			otpModel.setUsername(usermail);
-			
-			if(Boolean.parseBoolean(sendmail(usermail, otp, "Here is Your OTP").get("status").toString())) {
+
+			if (Boolean.parseBoolean(sendmail(usermail, otp, "Salesforce Made Easy OTP").get("status").toString())) {
 				otpRepository.save(otpModel);
 				map1.put("status", true);
 				map1.put("message", "otp bean send to your email");
 				return map1;
-			}else {
+			} else {
 				map1.put("status", false);
 				map1.put("message", "some error has bean accoured");
 				return map1;
 			}
-			
-			
+
 		} catch (Exception e) {
 			map1.put("status", false);
 			map1.put("message", "some error has bean accoured");
 			return map1;
 		}
-		
-		
+
 	}
 
-	public Map<String, Object> sendpass(String usermail) throws Exception {
+	public Map<String, Object> sendpass(String usermail) {
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		try {
-			UserMetaModel userMetaModel=userReposetory.findByusername(usermail);
+			UserMetaModel userMetaModel = userReposetory.findByuserid(usermail);
 			userMetaModel.setStatus(true);
 			userMetaModel.setOtpstatus(true);
 			userReposetory.save(userMetaModel);
 			sendmail(usermail, userMetaModel.getPassword(), "Here is Your Password");
-			
+
 			map1.put("status", true);
 			map1.put("message", "password has bean send to your email");
 			return map1;
 		} catch (Exception e) {
+			e.printStackTrace();
 			map1.put("status", false);
 			map1.put("message", "some error has bean accoured");
 			return map1;
 		}
-		
+
 	}
 
-	private Map<String, Object> sendmail(String usermail,String body,String sub)  throws Exception {
+	public Map<String, Object> sendActivationlink(UserMetaModel userMetaModel,String url, HttpSession session) {
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		try {
+			String b = "Dear " + userMetaModel.getUsername() + " <br><br>"
+					+ "You have been invited to Salesforce Made Easy by " + session.getAttribute("username")
+					+ ". Please click link below to register.<br>"
+					+ "<a href='"+url+"'>click here</a>";
+			sendmail(userMetaModel.getUserid(), b, "Salesforce Made Easy Invitation");
+			map1.put("status", true);
+			map1.put("message", "password has bean send to your email");
+			return map1;
+		} catch (Exception e) {
+			e.printStackTrace();
+			map1.put("status", false);
+			map1.put("message", "some error has bean accoured");
+			return map1;
+		}
+
+	}
+
+	private Map<String, Object> sendmail(String usermail, String body, String sub) throws Exception {
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		try {
 
@@ -122,8 +142,8 @@ public class OtpSendService {
 			message.setSubject(sub);
 
 			BodyPart messageBodyPart = new MimeBodyPart();
-			
-			messageBodyPart.setText(body);
+
+			messageBodyPart.setContent(body, "text/html");
 
 			Multipart multipart = new MimeMultipart();
 
@@ -143,6 +163,6 @@ public class OtpSendService {
 			map1.put("message", "some error has bean accoured");
 			return map1;
 		}
-		
+
 	}
 }
