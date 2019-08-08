@@ -26,13 +26,13 @@
 <script src="resources/assets/global/plugins/jquery-validation/js/jquery.validate.js" type="text/javascript"></script>
 <script src="resources/assets/global/plugins/jquery-validation/js/additional-methods.min.js"
   type="text/javascript"></script>
-<script src="resources/assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
+<script src="resources/assets/global/plugins/select2/js/select2.full.js" type="text/javascript"></script>
 <script src="resources/assets/global/plugins/bootstrap-toastr/toastr.js" type="text/javascript"></script>
 <script src="resources/assets/global/plugins/bootstrap-toastr/ui-toastr.js" type="text/javascript"></script>
 <!-- END THEME GLOBAL SCRIPTS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 
-
+<script src="resources/assets/pages/scripts/components-select2.min.js" type="text/javascript"></script>
 
 <!-- END PAGE LEVEL SCRIPTS -->
 <!-- BEGIN THEME LAYOUT SCRIPTS -->
@@ -46,4 +46,3 @@
   type="text/javascript"></script>
 <script src="resources/assets/global/plugins/jquery-multi-select/js/jquery.multi-select.js"
   type="text/javascript"></script>
-<script src="resources/assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>

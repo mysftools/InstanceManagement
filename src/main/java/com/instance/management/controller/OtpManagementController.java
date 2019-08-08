@@ -53,7 +53,7 @@ public class OtpManagementController {
 		OtpModel otpModel = otpRepository.findBytempPassword(otp);
 		if (otpModel != null) {
 			UserMetaModel userMetaModel = userrepo.findByuserid(username);
-			String s = userMetaModel.getUsername();
+			String s = userMetaModel.getUserid();
 			try {
 				long tenAgo = System.currentTimeMillis() - TEN_MINUTES;
 				if (otpModel.getSendTime().getTime() < tenAgo) {

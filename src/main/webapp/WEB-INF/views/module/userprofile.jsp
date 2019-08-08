@@ -67,27 +67,13 @@
 																	class="form-control" />
 															</div>
 															<div class="form-group">
-																<label class="control-label">Company Name</label> <input
-																	type="text" placeholder="User Name" id="companyname"
-																	class="form-control" disabled="disabled" />
-															</div>
-
-															<div class="form-group">
-																<label
-																	class="control-label visible-ie8 visible-ie9">Country</label>
+																<label class="control-label">Role</label>
 																<select name="role_list" id="role_list"
 																	class="select form-control" disabled="disabled">
 																	<option value="">---select role-- </option>
 																	<option value="admin">admin</option>
 																	<option value="developer">developer</option>
 																</select>
-															</div>
-
-															<div class="form-group">
-																<label class="control-label">Total number of
-																	calls</label> <input type="text" placeholder="calls"
-																	class="form-control" disabled="disabled"
-																	id="calls" />
 															</div>
 															<div class="margiv-top-10">
 																<a href="javascript:;" class="btn green"

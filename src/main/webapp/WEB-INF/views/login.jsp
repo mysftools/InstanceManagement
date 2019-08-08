@@ -82,15 +82,23 @@
 
                 <div class="input-icon">
                     <i class="fa fa-user"></i>
-                    <input class="form-control placeholder-no-fix" type="text" placeholder="Name of User"
-                        name="username" id="username" />
+                    <input class="form-control placeholder-no-fix" type="text" placeholder="First Name"
+                        name="fname" id="fname" />
                 </div>
             </div>
             <div class="form-group">
 
                 <div class="input-icon">
                     <i class="fa fa-user"></i>
-                    <input class="form-control placeholder-no-fix" type="text" placeholder="User Id" name="userid"
+                    <input class="form-control placeholder-no-fix" type="text" placeholder="Last Name"
+                        name="lname" id="lname" />
+                </div>
+            </div>
+            <div class="form-group">
+
+                <div class="input-icon">
+                    <i class="fa fa-user"></i>
+                    <input class="form-control placeholder-no-fix" type="text" placeholder="Email" name="userid"
                         id="userid" />
                 </div>
             </div>
@@ -113,7 +121,7 @@
             <div class="form-group">
                 <div class="input-icon">
                     <i class="fa fa-contao"></i>
-                    <input class="form-control placeholder-no-fix" type="text" placeholder="company name"
+                    <input class="form-control placeholder-no-fix" type="text" placeholder="Company"
                         name="company_list" id="company_list" />
                 </div>
             </div>

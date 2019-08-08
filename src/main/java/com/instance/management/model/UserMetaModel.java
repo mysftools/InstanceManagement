@@ -1,5 +1,6 @@
 package com.instance.management.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,17 +25,16 @@ public class UserMetaModel {
 	
 	boolean Otpstatus;
 
-	String companyName;
+	String companyId;
 	
 	String role;
+	
+	@Column(length=1024)
+	String listInst;
 	
 	int attempt;
 
 	boolean status;
-
-	int calls;
-
-	int remainingCalls;
 
 	public int getId() {
 		return id;
@@ -50,6 +50,14 @@ public class UserMetaModel {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getUserid() {
+		return userid;
+	}
+
+	public void setUserid(String userid) {
+		this.userid = userid;
 	}
 
 	public String getToken() {
@@ -76,12 +84,12 @@ public class UserMetaModel {
 		Otpstatus = otpstatus;
 	}
 
-	public String getCompanyName() {
-		return companyName;
+	public String getCompanyId() {
+		return companyId;
 	}
 
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
 	}
 
 	public String getRole() {
@@ -92,6 +100,14 @@ public class UserMetaModel {
 		this.role = role;
 	}
 
+	public String getListInst() {
+		return listInst;
+	}
+
+	public void setListInst(String listInst) {
+		this.listInst = listInst;
+	}
+
 	public int getAttempt() {
 		return attempt;
 	}
@@ -100,7 +116,7 @@ public class UserMetaModel {
 		this.attempt = attempt;
 	}
 
-	public boolean getStatus() {
+	public boolean isStatus() {
 		return status;
 	}
 
@@ -108,29 +124,5 @@ public class UserMetaModel {
 		this.status = status;
 	}
 
-	public int getCalls() {
-		return calls;
-	}
 
-	public void setCalls(int calls) {
-		this.calls = calls;
-	}
-
-	public int getRemainingCalls() {
-		return remainingCalls;
-	}
-
-	public void setRemainingCalls(int remainingCalls) {
-		this.remainingCalls = remainingCalls;
-	}
-
-	public String getUserid() {
-		return userid;
-	}
-
-	public void setUserid(String userid) {
-		this.userid = userid;
-	}
-
-	
 }

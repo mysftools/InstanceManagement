@@ -5,37 +5,38 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "instanceInfo")
-public class InstanceMetaModel implements Serializable {
+public class InstanceMetaModel {
 
-	private static final long serialVersionUID = 1L;
 	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	int id;
 
 	String securityCode;
-	
+
 	String coustomerName;
 
 	boolean isSandbox;
-	
+
 	String token;
-	
+
 	String instToken;
 
 	String nameOfInstance;
-	
+
 	String clientkey;
 
 	String clientSecreat;
-	
+
 	String password;
 
 	String username;
+	
+	String apiversion;
 
 	public int getId() {
 		return id;
@@ -123,5 +124,13 @@ public class InstanceMetaModel implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getApiversion() {
+		return apiversion;
+	}
+
+	public void setApiversion(String apiversion) {
+		this.apiversion = apiversion;
 	}
 }

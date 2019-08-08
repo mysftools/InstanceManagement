@@ -17,6 +17,8 @@ public class InstanceModel {
 	String username;
 	
 	String coustomerName;
+	
+	String apiversion;
 
 	public String getSecurityCode() {
 		return securityCode;
@@ -82,4 +84,11 @@ public class InstanceModel {
 		this.coustomerName = coustomerName;
 	}
 
+	public String getApiversion() {
+		return apiversion;
+	}
+
+	public void setApiversion(String apiversion) {
+		this.apiversion = apiversion;
+	}
 }

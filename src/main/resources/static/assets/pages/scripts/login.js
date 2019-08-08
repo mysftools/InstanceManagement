@@ -65,7 +65,10 @@ var Login = function () {
             ignore: "",
             rules: {
 
-                username: {
+            	fname: {
+                    required: true
+                },
+                lname: {
                     required: true
                 },
                 password: {
@@ -287,7 +290,7 @@ $("#forget-pass-btn").click(function () {
 
 $("#register-submit-btn").click(function () {
     var form = {
-        "username": $("#username").val(),
+        "username": $("#fname").val()+' '+$("#lname").val(),
         "userid": $("#userid").val(),
         "password": $("#password").val(),
         "rpassword": $("#rpassword").val(),

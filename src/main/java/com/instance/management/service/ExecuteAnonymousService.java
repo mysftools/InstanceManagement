@@ -17,20 +17,25 @@ import org.springframework.web.client.RestTemplate;
 import com.instance.management.model.AccountResponse;
 import com.instance.management.model.ApexModel;
 import com.instance.management.model.InstanceMetaModel;
-import com.instance.management.model.UserMetaModel;
+import com.instance.management.model.InstanceRunDetailsModel;
+import com.instance.management.model.ProgressBarMetaModel;
 import com.instance.management.reposetory.InstanceReposetory;
-import com.instance.management.reposetory.UserReposetory;
+import com.instance.management.reposetory.ProgressBarReposetory;
 
 @Service
 public class ExecuteAnonymousService implements Runnable {
 
 	SalesForceAuthService authService;
 
-	UserReposetory userrepo;
-
 	InstanceReposetory instancerepo;
 
+	ProgressBarReposetory progressBarReposetory;
+
+	InstanceRunDetailsService instanceRunDetailsService;
+
 	ApexModel apexModel = null;
+
+	public static Map<Long, Boolean> map1;
 
 	HttpSession session = null;
 
@@ -38,73 +43,84 @@ public class ExecuteAnonymousService implements Runnable {
 
 	}
 
-	public ExecuteAnonymousService(HttpSession session, ApexModel apexModel, UserReposetory userrepo,
-			InstanceReposetory instancerepo, SalesForceAuthService authService) throws Exception {
-		this.instancerepo=instancerepo;
-		this.authService=authService;
-		this.userrepo = userrepo;
+	public ExecuteAnonymousService(HttpSession session, ApexModel apexModel, InstanceReposetory instancerepo,
+			SalesForceAuthService authService, ProgressBarReposetory progressBarReposetory,
+			InstanceRunDetailsService instanceRunDetailsService, Map<Long, Boolean> map) throws Exception {
+		this.instancerepo = instancerepo;
+		this.authService = authService;
 		this.session = session;
 		this.apexModel = apexModel;
+		this.instanceRunDetailsService = instanceRunDetailsService;
+		this.progressBarReposetory = progressBarReposetory;
+		map1 = map;
 	}
 
 	@Override
 	public void run() {
 		try {
-			runapex1(session, apexModel);
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-	}
-
-	public Object runapex(Map<String, Object> responsemessage) {
-		try {
-
+			map1.put(Thread.currentThread().getId(), true);
+			InstanceMetaModel instanceMetaModel = instancerepo.findByinstToken(apexModel.getToken());
+			Map<String, Object> responsemessage = authService.login(instanceMetaModel.getUsername(),
+					instanceMetaModel.getPassword(),instanceMetaModel.getSecurityCode(), instanceMetaModel.getClientkey(),
+					instanceMetaModel.getClientSecreat());
 			if (Boolean.parseBoolean(responsemessage.get("status").toString())) {
 				HttpHeaders headers = new HttpHeaders();
 				headers.setContentType(MediaType.APPLICATION_JSON);
 				headers.set("Authorization", "Bearer " + responsemessage.get("access_token").toString());
 				MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
-
 				HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(
 						params, headers);
+				InstanceRunDetailsModel instanceRunDetailsModel = new InstanceRunDetailsModel();
+				instanceRunDetailsModel.setCode(apexModel.getCode());
+				instanceRunDetailsModel.setNum(apexModel.getNum());
+				instanceRunDetailsModel.setToken(instanceMetaModel.getInstToken());
+				Map<String, Object> map = instanceRunDetailsService.add(instanceRunDetailsModel, session);
+				String instdetailtoken = map.get("token").toString();
+				float p = (float) (double) 100 / apexModel.getNum();
+				float p1=p;
+				System.out.println(p);
+				ProgressBarMetaModel progressBarMetaModel = new ProgressBarMetaModel();
+				progressBarMetaModel.setInstrundtoken(instdetailtoken);
+				progressBarMetaModel.setPercentage(p);
+				progressBarMetaModel.setInsttoken(instanceMetaModel.getInstToken());
+				progressBarMetaModel.setThreadId(Thread.currentThread().getId());
+				progressBarReposetory.save(progressBarMetaModel);
 
-				RestTemplate restTemplate = new RestTemplate();
-				ResponseEntity<AccountResponse> salesforceTestData = restTemplate.exchange(
-						responsemessage.get("instance_url").toString()
-								+ "/services/data/v46.0/tooling/executeAnonymous/?" + "anonymousBody="
-								+ responsemessage.get("code").toString(),
-						HttpMethod.GET, request, AccountResponse.class);
-				responsemessage.put("data", salesforceTestData.getBody());
-				return responsemessage;
+				for (int i = 0; i < apexModel.getNum(); i++) {
+					if (map1.get(Thread.currentThread().getId())) {
+						ProgressBarMetaModel progressBarMetaModel1 = progressBarReposetory
+								.findByinstrundtoken(instdetailtoken);
+						p = p +p1;
+						System.out.println(p);
+						progressBarMetaModel1.setPercentage((int)p);
+						progressBarReposetory.save(progressBarMetaModel1);
+						RestTemplate restTemplate = new RestTemplate();
+						ResponseEntity<AccountResponse> salesforceTestData = restTemplate.exchange(
+								responsemessage.get("instance_url").toString() + "/services/data/v"
+										+instanceMetaModel.getApiversion() + "/tooling/executeAnonymous/?"
+										+ "anonymousBody=" + apexModel.getCode(),
+								HttpMethod.GET, request, AccountResponse.class);
+						responsemessage.put("data", salesforceTestData.getBody());
+					}
+
+				}
+				map1.put(Thread.currentThread().getId(), false);
+				instanceRunDetailsService.updatecalls(Integer.parseInt(responsemessage.get("runs").toString()),
+						session);
+				ProgressBarMetaModel progressBarMetaModel1 = progressBarReposetory.findByinstrundtoken(instdetailtoken);
+				progressBarReposetory.delete(progressBarMetaModel1);
+				 runapex(responsemessage);
 			} else {
-				return responsemessage;
+				runapex(responsemessage);
 			}
+		
 		} catch (Exception e) {
 			e.printStackTrace();
-			return e;
 		}
-
 	}
 
-	public Object runapex1(HttpSession session, ApexModel apexModel) throws Exception {
-		
-		UserMetaModel userMetaModel = userrepo.findBytoken(session.getAttribute("token").toString());
-		if (userMetaModel.getRemainingCalls() >= apexModel.getNum()) {
-			InstanceMetaModel instanceMetaModel = instancerepo.findByinstToken(apexModel.getToken());
-			Map<String, Object> responsemessage = authService.login(instanceMetaModel.getUsername(),
-					instanceMetaModel.getPassword(), instanceMetaModel.getClientkey(),
-					instanceMetaModel.getClientSecreat());
-			if (Boolean.parseBoolean(responsemessage.get("status").toString())) {
-				responsemessage.put("code", apexModel.getCode());
-				return runapex(responsemessage);
-			} else {
-				return responsemessage;
-			}
-		} else {
-			return false;
-		}
-
+	public Object runapex(Map<String, Object> responsemessage) {
+		return responsemessage;		
 	}
-
+	
 }

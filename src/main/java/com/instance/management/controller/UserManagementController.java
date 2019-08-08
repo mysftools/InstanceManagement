@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.instance.management.model.ChangepwdModel;
+import com.instance.management.model.CompanyMetaModel;
 import com.instance.management.model.UserMetaModel;
 import com.instance.management.model.UserModel;
 import com.instance.management.model.UserUpdateModel;
+import com.instance.management.reposetory.CompanyReposetory;
 import com.instance.management.reposetory.UserReposetory;
 import com.instance.management.service.OtpSendService;
 import com.instance.management.system.RandomToken;
@@ -30,6 +32,9 @@ public class UserManagementController {
 
 	@Autowired
 	UserReposetory userrepo;
+	
+	@Autowired
+	CompanyReposetory companyReposetory;
 
 	@Autowired
 	OtpSendService otpSendService;
@@ -53,7 +58,12 @@ public class UserManagementController {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		if (userModel.getPassword().equals(userModel.getRpassword())) {
-
+			CompanyMetaModel companyMetaModel=new CompanyMetaModel();
+			companyMetaModel.setCompanyname(userModel.getCompanyId().toUpperCase());
+			companyMetaModel.setToken(randomToken.getToken(10));
+			companyMetaModel.setTotalruns(0);
+			companyMetaModel.setRemainingruns(0);
+			
 			UserMetaModel userMetaModel = new UserMetaModel();
 			userMetaModel.setUsername(userModel.getUsername());
 			userMetaModel.setUserid(userModel.getUserid());
@@ -61,13 +71,11 @@ public class UserManagementController {
 			userMetaModel.setOtpstatus(false);
 			userMetaModel.setPassword(userModel.getPassword());
 			userMetaModel.setRole(userModel.getRole());
-			userMetaModel.setCompanyName(userModel.getCompanyId().toUpperCase());
-			userMetaModel.setCalls(userModel.getCalls());
-			userMetaModel.setRemainingCalls(userModel.getCalls());
+			userMetaModel.setCompanyId(companyMetaModel.getToken());
 			userMetaModel.setToken(randomToken.getToken(10));
-
 			if (Boolean.parseBoolean(otpSendService.sendotp(userModel.getUserid()).get("status").toString())) {
 				userrepo.save(userMetaModel);
+				companyReposetory.save(companyMetaModel);
 				model.addAttribute("email", userModel.getUserid());
 				map.put("status", true);
 				map.put("code", 200);
@@ -136,7 +144,7 @@ public class UserManagementController {
 			response.sendRedirect("/");
 			return null;
 		}
-		return userrepo.findByCompanyNameAndRole(session.getAttribute("company").toString(), "developer");
+		return userrepo.findByCompanyIdAndRole(session.getAttribute("company").toString(), "developer");
 	}
 
 	@PostMapping("/update")
@@ -152,7 +160,7 @@ public class UserManagementController {
 		if (userMetaModel != null) {
 			userMetaModel.setUserid(updateModel.getUserid());
 			userMetaModel.setUsername(updateModel.getUsername());
-			userMetaModel.setCompanyName(updateModel.getCompanyname());
+			userMetaModel.setListInst(updateModel.getListInst());
 			userrepo.save(userMetaModel);
 			map.put("status", true);
 			map.put("response", userMetaModel);
@@ -164,29 +172,6 @@ public class UserManagementController {
 			return map;
 		}
 
-	}
-
-	@PostMapping("/updatecalls")
-	public @ResponseBody Object updatecalls(@RequestParam int calls, HttpServletResponse response,
-			HttpSession session) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			if (!LoginController.userValidate(session)) {
-				response.sendRedirect("/");
-				return null;
-			}
-			UserMetaModel userMetaModel = userrepo.findBytoken(session.getAttribute("token").toString());
-			userMetaModel.setRemainingCalls(userMetaModel.getRemainingCalls() - calls);
-			userrepo.save(userMetaModel);
-			map.put("status", true);
-			map.put("message", "User Updated successfully");
-			return map;
-		} catch (Exception e) {
-			e.printStackTrace();
-			map.put("status", false);
-			map.put("message", "some error has bean occured");
-			return map;
-		}
 	}
 
 	@PostMapping("/changepassword")
@@ -245,7 +230,7 @@ public class UserManagementController {
 				return null;
 			}
 			UserMetaModel usermodel = userrepo.findBytoken(token);
-			usermodel.setStatus(!usermodel.getStatus());
+			usermodel.setStatus(!usermodel.isStatus());
 			usermodel.setOtpstatus(!usermodel.isOtpstatus());
 			userrepo.save(usermodel);
 			map.put("status", true);

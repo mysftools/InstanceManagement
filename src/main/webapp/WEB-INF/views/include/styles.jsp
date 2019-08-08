@@ -33,3 +33,4 @@
     type="text/css" />
 <link href="resources/assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
 <link href="resources/assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="resources/assets/pages/css/pricing.css" rel="stylesheet" type="text/css" />

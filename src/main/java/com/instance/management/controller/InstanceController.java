@@ -1,6 +1,8 @@
 package com.instance.management.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -19,13 +21,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.instance.management.model.InstanceMetaModel;
 import com.instance.management.model.InstanceModel;
 import com.instance.management.model.InstanceUpdateModel;
+import com.instance.management.model.UserMetaModel;
 import com.instance.management.reposetory.InstanceReposetory;
 import com.instance.management.reposetory.InstanceRunDetailsReposetory;
+import com.instance.management.reposetory.UserReposetory;
 import com.instance.management.system.RandomToken;
 
 @Controller
 @RequestMapping("/instancemanagement")
 public class InstanceController {
+	
+	@Autowired
+	UserReposetory userrepo;
 
 	@Autowired
 	InstanceReposetory instanceReposetory;
@@ -48,16 +55,30 @@ public class InstanceController {
 
 	@PostMapping("/getall")
 	public @ResponseBody Object testusser(HttpServletResponse response, HttpSession session) throws Exception {
-
+		Map<String, Object> map = new HashMap<String, Object>();
 		if (!LoginController.userValidate(session)) {
 			response.sendRedirect("/");
 			return null;
 		}
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("role", session.getAttribute("role"));
-		map.put("status", true);
-		map.put("response", instanceReposetory.findBytoken(session.getAttribute("token").toString()));
-		return map;
+		if (session.getAttribute("role").equals("admin")) {
+			
+			map.put("role", session.getAttribute("role"));
+			map.put("status", true);
+			map.put("response", instanceReposetory.findBytoken(session.getAttribute("token").toString()));
+			return map;
+		} else {
+			UserMetaModel usermodel =userrepo.findBytoken(session.getAttribute("token").toString());
+			List<InstanceMetaModel> instanceMetaModels=new ArrayList<InstanceMetaModel>();
+			String list=usermodel.getListInst();
+			for (String instid : list.split(",")) {
+				instanceMetaModels.add(instanceReposetory.findByinstToken(instid));
+			}
+			map.put("role", session.getAttribute("role"));
+			map.put("status", true);
+			map.put("response", instanceMetaModels);
+			return map;
+		}
+		
 	}
 
 	@PostMapping("/getlist")
@@ -89,6 +110,8 @@ public class InstanceController {
 		}
 		InstanceMetaModel instanceMetaModel = new InstanceMetaModel();
 		instanceMetaModel.setToken(session.getAttribute("token").toString());
+		instanceMetaModel.setPassword(instanceModel.getPassword());
+		instanceMetaModel.setUsername(instanceModel.getUsername());
 		instanceMetaModel.setNameOfInstance(instanceModel.getNameOfInstance());
 		instanceMetaModel.setSecurityCode(instanceModel.getSecurityCode());
 		instanceMetaModel.setSandbox(Boolean.parseBoolean(instanceModel.getType()));
@@ -96,6 +119,7 @@ public class InstanceController {
 		instanceMetaModel.setClientkey(instanceModel.getClientkey());
 		instanceMetaModel.setCoustomerName(instanceModel.getCoustomerName());
 		instanceMetaModel.setClientSecreat(instanceModel.getClientSecreat());
+		instanceMetaModel.setApiversion(instanceModel.getApiversion());
 		instanceReposetory.save(instanceMetaModel);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("status", true);
@@ -148,27 +172,32 @@ public class InstanceController {
 	}
 
 	@PostMapping("/updatebyid")
-	public @ResponseBody Object update(@RequestBody InstanceUpdateModel instanceMetaModel, HttpServletResponse response,
+	public @ResponseBody Object update(@RequestBody InstanceUpdateModel instanceUpdateModel, HttpServletResponse response,
 			HttpSession session) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (!LoginController.userValidate(session)) {
 			response.sendRedirect("/");
 			return null;
 		}
-		InstanceMetaModel instanceMetaModel1 = instanceReposetory.findByinstToken(instanceMetaModel.getInstToken());
-		if (instanceMetaModel1 != null) {
-			instanceMetaModel1.setToken(session.getAttribute("token").toString());
-			instanceMetaModel1.setInstToken(instanceMetaModel.getInstToken());
-			instanceMetaModel1.setNameOfInstance(instanceMetaModel.getNameOfInstance());
-			instanceMetaModel1.setSecurityCode(instanceMetaModel.getSecurityCode());
-			instanceMetaModel1.setSandbox(Boolean.parseBoolean(instanceMetaModel.getIsSandbox()));
-			instanceMetaModel1.setClientkey(instanceMetaModel.getClientkey());
-			instanceMetaModel1.setClientSecreat(instanceMetaModel.getClientSecreat());
-			instanceReposetory.save(instanceMetaModel1);
+		InstanceMetaModel instanceMetaModel = instanceReposetory.findByinstToken(instanceUpdateModel.getInstToken());
+		if (instanceMetaModel != null) {
+			instanceMetaModel.setToken(session.getAttribute("token").toString());
+			instanceMetaModel.setSandbox(Boolean.parseBoolean(instanceUpdateModel.getType()));
+			instanceMetaModel.setInstToken(instanceUpdateModel.getInstToken());
+			instanceMetaModel.setPassword(instanceUpdateModel.getPassword());
+			instanceMetaModel.setUsername(instanceUpdateModel.getUsername());
+			instanceMetaModel.setCoustomerName(instanceUpdateModel.getCoustomerName());
+			instanceMetaModel.setNameOfInstance(instanceUpdateModel.getNameOfInstance());
+			instanceMetaModel.setSecurityCode(instanceUpdateModel.getSecurityCode());
+			instanceMetaModel.setClientkey(instanceUpdateModel.getClientkey());
+			instanceMetaModel.setClientSecreat(instanceUpdateModel.getClientSecreat());
+			instanceMetaModel.setApiversion(instanceUpdateModel.getApiversion());
+			instanceReposetory.save(instanceMetaModel);
 			map.put("status", true);
 			map.put("response", "Deleted successfully");
 			return map;
 		} else {
+			
 			map.put("status", false);
 			map.put("message", "no data found");
 			return map;

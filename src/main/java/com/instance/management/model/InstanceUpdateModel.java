@@ -4,13 +4,15 @@ public class InstanceUpdateModel {
 
 	String securityCode;
 
-	String isSandbox;
+	String type;
 
 	String token;
 
 	String instToken;
 
 	String nameOfInstance;
+	
+	String coustomerName;
 
 	String clientkey;
 
@@ -20,6 +22,8 @@ public class InstanceUpdateModel {
 
 	String username;
 
+	String apiversion;
+	
 	public String getSecurityCode() {
 		return securityCode;
 	}
@@ -28,12 +32,13 @@ public class InstanceUpdateModel {
 		this.securityCode = securityCode;
 	}
 
-	public String getIsSandbox() {
-		return isSandbox;
+
+	public String getType() {
+		return type;
 	}
 
-	public void setIsSandbox(String isSandbox) {
-		this.isSandbox = isSandbox;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getToken() {
@@ -91,5 +96,22 @@ public class InstanceUpdateModel {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+	public String getCoustomerName() {
+		return coustomerName;
+	}
+
+	public void setCoustomerName(String coustomerName) {
+		this.coustomerName = coustomerName;
+	}
+
+	public String getApiversion() {
+		return apiversion;
+	}
+
+	public void setApiversion(String apiversion) {
+		this.apiversion = apiversion;
+	}
+
 
 }

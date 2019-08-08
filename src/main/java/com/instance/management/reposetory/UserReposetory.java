@@ -9,7 +9,7 @@ import com.instance.management.model.UserMetaModel;
 public interface UserReposetory extends JpaRepository<UserMetaModel	, Integer> {
 	public UserMetaModel findBytoken(String token);
 	public UserMetaModel findByuserid(String username);
-	public List<UserMetaModel> findByCompanyNameAndRole(String companyname,String role);
+	public List<UserMetaModel> findByCompanyIdAndRole(String companyname,String role);
 	
 	
 }

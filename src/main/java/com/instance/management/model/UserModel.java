@@ -14,7 +14,9 @@ public class UserModel {
 	
 	String userid;
 	
-	int calls;
+	String listInst;
+	
+	
 
 	public String getUsername() {
 		return username;
@@ -56,20 +58,20 @@ public class UserModel {
 		this.role = role;
 	}
 
-	public int getCalls() {
-		return calls;
-	}
-
-	public void setCalls(int calls) {
-		this.calls = calls;
-	}
-
 	public String getUserid() {
 		return userid;
 	}
 
 	public void setUserid(String userid) {
 		this.userid = userid;
+	}
+
+	public String getListInst() {
+		return listInst;
+	}
+
+	public void setListInst(String listInst) {
+		this.listInst = listInst;
 	}
 
 }

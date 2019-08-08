@@ -11,6 +11,9 @@ var Login = function () {
 				nameOfCoustomer: {
 					required: true
 				},
+				apiversion: {
+					required: true
+				},
 				username: {
 					required: true
 				},
@@ -109,9 +112,10 @@ jQuery(document).ready(function () {
 		$('.modal-title').text("Enter Details");
 		$('#new_inst').modal('show');
 	});
-
+	
 
 });
+
 
 function loadtable() {
 	$.ajax({
@@ -163,6 +167,12 @@ function loadtable() {
 							}
 						},
 						{
+							data: "coustomerName"
+						},
+						{
+							data: "apiversion"
+						},
+						{
 							data: "id",
 							mRender: function (data, type, row) {
 								var str;
@@ -181,13 +191,13 @@ function loadtable() {
 								var str;
 								if (role == 'admin') {
 									str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
-										"onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
+										"onclick=progress('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
 										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=backup('" + row.instToken + "')> BackUp" +
 										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> <i class='fa fa-history'></i>" +
 										"</button>";
 								} else {
 									str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
-										"onclick=runapex('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
+										"onclick=progress('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
 										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=alertadmin()> BackUp" +
 										"</button>" + "<button  class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> <i class='fa fa-history'></i>" +
 										"</button>";
@@ -214,21 +224,21 @@ function loadtable() {
 
 			App.unblockUI();
 		}
-	}
-	);
+	});
 
 }
 
 function alertadmin() {
 	error("You are not allowed");
 }
+
 function showinstdetails(token) {
 	window.location = "/instancedetails?token=" + token;
 }
 
-
 function backup(token) {
 	$('[name=uid]').val(token);
+	$('.modal-title').text('Add Package.xml File');
 	$("#back-up").modal('show');
 }
 
@@ -242,7 +252,8 @@ $("#inst").click(function () {
 		"clientSecreat": $("#clientSecreat").val(),
 		"username": $("#username").val(),
 		"password": $("#password").val(),
-		"securityCode": $("#securityCode").val()
+		"securityCode": $("#securityCode").val(),
+		"apiversion": $("apiversion").val()
 	};
 
 	if (form.nameOfInstance != "" && form.type != "" && form.securityCode != "") {
@@ -286,6 +297,65 @@ $("#inst").click(function () {
 	};
 });
 
+
+
+function progress(token,name) {
+	var form=new FormData();
+    form.append("instancetoken",token);
+	
+	$.ajax({
+		type: 'POST',
+		url: "apex/getprogress?instancetoken="+token,
+		dataType: "JSON",
+		async: false,
+		data:form,
+		processData: false,
+		cache: false,
+		contentType: "application/json",
+		beforeSend: function () {
+			App.blockUI({
+				boxed: true,
+				message: "Please Wait..."
+			});
+		},
+		success: function (data) {
+			viewcounter();
+			if (data.status) {
+				$("#p").attr('style', 'width: ' +data.response['percentage'] + '%; color : red;');
+				$("#pvalue").text(data.response['percentage'] + "%");
+				$("#show-api-call").show();
+				$("#inst").hide();
+				$("#apex1").show();
+				$("#instence").hide();
+				$("#inst-update").hide();
+				$("#inst-run").show();
+				$(".register-form")[0].reset();
+				$('.modal-title').text('Add Instance Details');
+				$('#new_inst').modal('show');
+				$('[name=uid]').val(token);
+				$('#instname').text(name);
+				$("#apex").attr('disabled','disabled');
+				$("#call").attr('disabled','disabled');
+				setInterval("settime()", 1000);
+				App.unblockUI();
+			} else{ 
+				if (data.code==102) {
+					runapex(token, name);
+					App.unblockUI();
+				}else {
+					error("Problem occures during process pr1");
+					App.unblockUI();
+				}
+			} 
+		},
+		error: function () {
+			viewcounter();
+			error("Problem occures during process pr2");
+			App.unblockUI();
+		}
+	});	
+}
+
 function runapex(token, name) {
 	viewcounter();
 	var n = Number($("#sc").text());
@@ -304,9 +374,55 @@ function runapex(token, name) {
 		$('#new_inst').modal('show');
 		$('[name=uid]').val(token);
 		$('#instname').text(name);
-
+		
 	}
 
+}
+function settime(){
+	while ($('#new_inst').is(':visible') && $("#inst-run").is(':visible')&& $("#show-api-call").is(':visible')) {
+		console.log('ddd');
+		$.ajax({
+			type: 'POST',
+			url: "apex/getprogress?instancetoken="+($("#uid").val()),
+			dataType: "JSON",
+			async: false,
+			processData: false,
+			cache: false,
+			contentType: "application/json",
+			beforeSend: function () {
+				App.blockUI({
+					boxed: true,
+					message: "Please Wait..."
+				});
+			},
+			success: function (data) {
+				viewcounter();
+				if (data.status) {
+					$("#p").attr('style', 'width: ' +data.response['percentage'] + '%; color : red;');
+					$("#pvalue").text(data.response['percentage'] + "%");
+					$("#apex").attr('disabled','disabled');
+					$("#call").attr('disabled','disabled');
+					App.unblockUI();
+				} else{ 
+					if (data.code==102) {
+						runapex(token, name);
+						App.unblockUI();
+					}else {
+						error("Problem occures during process pr1");
+						App.unblockUI();
+					}
+				} 
+			},
+			error: function () {
+				viewcounter();
+				error("Problem occures during process pr2");
+				App.unblockUI();
+			}
+		});	
+		
+		//progress($('[name=uid]').val(),$('#instname').text(name));
+	};
+	
 }
 
 $("#inst-run").click(function () {
@@ -325,112 +441,18 @@ $("#inst-run").click(function () {
 			max: n
 		});
 	} else {
-		var prog = 100 / d;
-		var promises = [];
-		var duration = 5000;
-		for (var i = 0; i < d; i++) {
-			progress(i, prog);
-			var request = runcode(form, i, prog);
-			promises.push(request);
-
-		};
-		updatecalls(d);
-		addinstdetails(form);
-		// postProcess();
+		runcode(form);
 	};
 
 });
 
-function updatecalls(calls) {
-	$.ajax({
-		type: 'POST',
-		url: "usermanagement/updatecalls?calls=" + calls,
-		dataType: "JSON",
-		async: true,
-		processData: false,
-		cache: false,
-		contentType: "application/json",
-		beforeSend: function () {
-			App.blockUI({
-				boxed: true,
-				message: "Please Wait..."
-			});
-		},
-		success: function (data) {
-			viewcounter();
-			if (data.status) {
-				// success("DONE");
-				App.unblockUI();
-
-			} else if (!data.status) {
-				error("Problem occures during process");
-				App.unblockUI();
-			} else {
-				error("Problem occures during process");
-				App.unblockUI();
-			}
-
-		},
-		error: function () {
-			viewcounter();
-			error("Problem occures during process");
-			App.unblockUI();
-		}
-	});
-}
-function progress(i, prog) {
-	$("#p").attr('style', 'width: ' + (i + 1) * prog + '%; color : red;');
-
-	$("#pvalue").text((i + 1) * prog + "%");
-}
-
-function addinstdetails(form) {
-	$.ajax({
-		type: 'POST',
-		url: "instancedetails/add",
-		dataType: "JSON",
-		async: true,
-		data: JSON.stringify(form),
-		processData: false,
-		cache: false,
-		contentType: "application/json",
-		beforeSend: function () {
-			App.blockUI({
-				boxed: true,
-				message: "Please Wait..."
-			});
-		},
-		success: function (data) {
-			viewcounter();
-			if (data.status) {
-				success("successfully added new instance");
-				App.unblockUI();
-				postprocess();
-			} else if (!data.status) {
-				error("Problem occures during process");
-				App.unblockUI();
-			} else {
-				error("Problem occures during process");
-				App.unblockUI();
-			}
-
-		},
-		error: function () {
-			viewcounter();
-			error("Problem occures during process");
-			App.unblockUI();
-		}
-	});
-}
-
-function runcode(form, i, prog) {
+function runcode(form) {
 	if (form.code != '' && form.token != '' && form.num != '') {
-
-		return $.ajax({
+		$.ajax({
 			type: 'POST',
 			url: "apex/runcode",
 			dataType: "JSON",
-			async: false,
+			async: true,
 			data: JSON.stringify(form),
 			processData: false,
 			cache: false,
@@ -446,47 +468,30 @@ function runcode(form, i, prog) {
 				if (data.status) {
 					success("DONE");
 					App.unblockUI();
-					postprocess();
+					//postprocess();
 				} else if (!data.status) {
-					error("Problem occures during process");
+					error("Problem occures during process c1");
 					App.unblockUI();
-				} else {
-					error("Problem occures during process");
+				} else { 
+					error("Problem occures during process c2");
 					App.unblockUI();
 				}
-
 			},
 			error: function () {
 				viewcounter();
-				error("Problem occures during process");
+				error("Problem occures during process c3");
 				App.unblockUI();
+				postprocess();
 			}
 		});
 	}
-
 }
 
-function warnUser() {
-	swal({
-		title: "Ohhhhoo",
-		text: "You have executed the number of calls",
-		icon: "warning",
-		buttons: true,
-		dangerMode: true,
-	}).then((willDelete) => {
 
-		if (willDelete) {
-			swal("Please contact admin!", { icon: "success", });
-
-		}
-		else {
-			swal("Operation is canceled!", { icon: "error", });
-		}
-	});
-}
 function getinst(token) {
-	$("#inst").hide();
+	$("#instence").show();
 	$("#call1").hide();
+	$("#inst").hide();
 	$("#inst-run").hide();
 	$("#apex1").hide();
 	$("#inst-update").show();
@@ -523,6 +528,7 @@ function getinst(token) {
 				$('#nameOfInstance').val(data.response['nameOfInstance']);
 				$('#username').val(data.response['username']);
 				$('#password').val(data.response['password']);
+				$('#apiversion').val(data.response['apiversion']);
 
 			}
 			else {
@@ -621,6 +627,7 @@ function viewUser(token) {
 				$('#instToken').text(data.response['instToken']);
 				$('#username1').text(data.response['username']);
 				$('#nameOfInstanced').text(data.response['nameOfInstance']);
+				$('#apiversion1').text(data.response['apiversion']);
 			}
 			else {
 				error("Problem occures during process");
@@ -635,7 +642,7 @@ function viewUser(token) {
 }
 
 $("#inst-update").click(function () {
-
+	 
 	var form = {
 		"instToken": $("[name=uid]").val(),
 		"coustomerName": $("#nameOfCoustomer").val(),
@@ -643,7 +650,10 @@ $("#inst-update").click(function () {
 		"type": $("#select").val(),
 		"clientkey": $("#clientkey").val(),
 		"clientSecreat": $("#clientSecreat").val(),
+		"username": $("#username").val(),
+		"password": $("#password").val(),
 		"nameOfInstance": $("#nameOfInstance").val(),
+		"apiversion": $("#apiversion").val()
 
 	};
 
@@ -724,7 +734,7 @@ $('#backup-btn').on("click", function () {
 	var file = $('#filepath').val();
 	if (file != "") {
 		var form = $('.backup-form')[0];
-		// Create an FormData object 
+		// Create an FormData object
 		var data = new FormData(form);
 		console.log(form)
 		$.ajax({
@@ -776,4 +786,66 @@ function sleep(milliseconds) {
 			break;
 		}
 	}
+}
+
+
+function warnUser() {
+	swal({
+		title: "Error",
+		text: "You have no run's remaining ,Please purchase it",
+		icon: "warning",
+		buttons: true,
+		dangerMode: true,
+	}).then((willDelete) => {
+
+		if (willDelete) {
+			
+			price();
+		}
+		else {
+			swal("Operation is canceled!", { icon: "error", });
+		}
+	});
+}
+
+function price(){
+	$('#price').modal('show');
+}
+
+function purchaseruns(count){
+	console.log(count);
+	$.ajax({
+		type: 'POST',
+		url: "company/purchase?calls=" + count,
+		dataType: "JSON",
+		async: true,
+		processData: false,
+		cache: false,
+		contentType: "application/json",
+		beforeSend: function () {
+
+			App.blockUI({
+				boxed: true,
+				message: "Please Wait..."
+			});
+		},
+		success: function (data) {
+			if (data.status) {
+				success(data.message);
+				$('#price').modal('hide');
+				App.unblockUI();
+			} else if (!data.status) {
+				error("Problem occures during process");
+				App.unblockUI();
+			} else {
+				error("Problem occures during process");
+				App.unblockUI();
+			}
+		},
+		error: function () {
+			error("Problem occures during process");
+			App.unblockUI();
+		}
+	});
+	
 }

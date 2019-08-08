@@ -51,33 +51,45 @@ public class InviteController {
 
 	@PostMapping("/saveuser")
 	public @ResponseBody Object add(@RequestBody UserModel userModel, @RequestParam String url, HttpSession session,
-			Model model) throws Exception {
+			HttpServletResponse response) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			if (!LoginController.userValidate(session)) {
+				response.sendRedirect("/");
+				return null;
+			}
+			if (userModel.getPassword().equals(userModel.getRpassword())) {
 
-		if (userModel.getPassword().equals(userModel.getRpassword())) {
+				UserMetaModel userMetaModel = new UserMetaModel();
+				userMetaModel.setUsername(userModel.getUsername());
+				userMetaModel.setUserid(userModel.getUserid());
+				userMetaModel.setListInst(userModel.getListInst());
+				userMetaModel.setStatus(false);
+				userMetaModel.setOtpstatus(false);
+				userMetaModel.setPassword(userModel.getPassword());
+				userMetaModel.setRole(userModel.getRole());
+				userMetaModel.setCompanyId(session.getAttribute("company").toString());
+				userMetaModel.setToken(randomToken.getToken(10));
 
-			UserMetaModel userMetaModel = new UserMetaModel();
-			userMetaModel.setUsername(userModel.getUsername());
-			userMetaModel.setUserid(userModel.getUserid());
-			userMetaModel.setStatus(false);
-			userMetaModel.setOtpstatus(false);
-			userMetaModel.setPassword(userModel.getPassword());
-			userMetaModel.setRole(userModel.getRole());
-			userMetaModel.setCompanyName(userModel.getCompanyId().toUpperCase());
-			userMetaModel.setCalls(userModel.getCalls());
-			userMetaModel.setRemainingCalls(userModel.getCalls());
-			userMetaModel.setToken(randomToken.getToken(10));
-			String t = twoWayPasswordManagement.encrypt(userMetaModel.getUserid());
-			url = url + "/active?token=" + t;
-			if (Boolean.parseBoolean(
-					otpSendService.sendActivationlink(userMetaModel, url, session).get("status").toString())) {
-				userrepo.save(userMetaModel);
-				model.addAttribute("email", userModel.getUserid());
-				map.put("status", true);
-				map.put("code", 200);
-				map.put("message", "user added");
-				return map;
+				String t = twoWayPasswordManagement.encrypt(userMetaModel.getUserid());
+				url = url + "/active?token=" + t;
+
+				if (Boolean.parseBoolean(
+						otpSendService.sendActivationlink(userMetaModel, url, session).get("status").toString())) {
+					userrepo.save(userMetaModel);
+
+					map.put("status", true);
+					map.put("code", 200);
+					map.put("message", "user added");
+					return map;
+				} else {
+					map.put("status", false);
+					map.put("code", 400);
+					map.put("message", "user not added");
+					return map;
+				}
+
 			} else {
 				map.put("status", false);
 				map.put("code", 400);
@@ -85,7 +97,8 @@ public class InviteController {
 				return map;
 			}
 
-		} else {
+		} catch (Exception e) {
+			e.printStackTrace();
 			map.put("status", false);
 			map.put("code", 400);
 			map.put("message", "user not added");

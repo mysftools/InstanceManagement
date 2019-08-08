@@ -6,9 +6,7 @@ public class UserUpdateModel {
 	
 	String userid;
 	
-	
-
-	String companyname;
+	String listInst;
 
 	String token;
 
@@ -19,15 +17,6 @@ public class UserUpdateModel {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
-	public String getCompanyname() {
-		return companyname;
-	}
-
-	public void setCompanyname(String companyname) {
-		this.companyname = companyname;
-	}
-
 	public String getToken() {
 		return token;
 	}
@@ -41,5 +30,13 @@ public class UserUpdateModel {
 
 	public void setUserid(String userid) {
 		this.userid = userid;
+	}
+
+	public String getListInst() {
+		return listInst;
+	}
+
+	public void setListInst(String listInst) {
+		this.listInst = listInst;
 	}
 }

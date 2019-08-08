@@ -78,7 +78,8 @@ var Login = function () {
 
 jQuery(document).ready(function () {
     Login.init();
-
+    loadlist();
+   
     table = $('#listMember').DataTable({
         "processing": true, // Feature control the processing indicator.
         "serverSide": false, // Feature control DataTables' server-side
@@ -112,9 +113,6 @@ jQuery(document).ready(function () {
                 data: "userid"
             },
             {
-                data: "companyName"
-            },
-            {
                 data: "role"
             },
             {
@@ -143,6 +141,8 @@ jQuery(document).ready(function () {
     };
 });
 $("#add_new").click(function () {
+	 $('#new_user').modal({backdrop: 'static', keyboard: false});
+	 $("#user-save").show();
     $("#pass").show();
     $('.modal-title').text("Enter User Details");
     $('#user-update').hide();
@@ -150,6 +150,8 @@ $("#add_new").click(function () {
 });
 
 $("#cancle").click(function () {
+	$('.select2-selection__rendered .select2-selection__choice').remove();
+	$(".select2-search__field").attr("placeholder","Select a Instance");
     $('.form-group').removeClass('has-error');
     $(".register-form")[0].reset();
     $(".help-block").html("");
@@ -157,12 +159,13 @@ $("#cancle").click(function () {
 
 
 $("#user-save").click(function () {
+	
     var form = {
         "username": $("#username").val(),
+        "listInst": $("#multiple").val().toString(),
         "userid": $("#userid").val(),
         "password": $("#password").val(),
-        "rpassword": $("#cpassword").val(),
-        "companyId": $("#companyname").val(),
+        "rpassword": $("#cpassword").val(),     
         "role": $("#role_list").val()
     };
     if (form.username != "" && form.password != "" && form.rpassword != "" && form.role != "" && form.companyId != "") {
@@ -285,7 +288,7 @@ var upst = function (token) {
 };
 
 function updateuser(token) {
-
+	 $('#new_user').modal({backdrop: 'static', keyboard: false});
     $("#pass").hide();
     $("#user-save").hide();
     $("#user-update").show();
@@ -301,13 +304,23 @@ function updateuser(token) {
         contentType: false,
         beforeSend: function () { },
         success: function (data) {
-            // console.log(data);
+
             if (data.status) {
+            	var str='';
+            	$('.select2-selection__rendered').empty()
+            	var nameArr = (data.response['listInst']).split(',');
+            	for (var i = 0; i < nameArr.length; i++) {
+            		
+            		str +='<li class="select2-selection__choice" title="'+$("#multiple option[value='"+nameArr[i]+"']").text()+'"><span class="select2-selection__choice__remove" role="presentation">'+'x'+'</span>'+$("#multiple option[value='"+nameArr[i]+"']").text()+'</li>';
+				}
+            	str +='<li class="select2-search select2-search--inline"><input class="select2-search__field" type="search" tabindex="-1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="textbox" placeholder="" style="width: 0.75em;"></li>';
                 $('[name=memberToken]').val(data.response['token']);
                 $('#username').val(data.response['username']);
                 $('#companyname').val(data.response['companyName']);
                 $('#userid').val(data.response['userid']);
-
+                $('#multiple').val('['+data.response['listInst']+']');
+                $('.select2-selection__rendered').append(str);
+                //
             }
             else {
                 error("Problem occures during process");
@@ -325,8 +338,8 @@ $("#user-update").click(function () {
     var form = {
         "token": $("#memberToken").val(),
         "username": $("#username").val(),
-        "companyname": $("#companyname").val(),
         "userid": $("#userid").val(),
+        "listInst": $("#multiple").val().toString(),
     };
 
     $.ajax({
@@ -421,5 +434,45 @@ var deleteuser = function (token) {
         }
 
     });
+}
+function loadlist() {
+	$.ajax({
+		type: 'POST',
+		url: "/instancemanagement/getlist",
+		dataType: "JSON",
+		async: false,
+		processData: false,
+		cache: false,
+		contentType: "application/json",
+		beforeSend: function () {
+
+			App.blockUI({
+				boxed: true,
+				message: "Please Wait..."
+			});
+		},
+		success: function (data) {
+			var text = "";
+			if (data.status) {
+				for (var i = 0; i < data.data.length; i++) {
+					text = text + "<option value='" + data.data[i].instToken
+						+ "'>" + data.data[i].nameOfInstance + "</option>";
+				}
+				$('#multiple').append(text);
+				App.unblockUI();
+			} else if (!data.status) {
+				error("Problem occures during process");
+				App.unblockUI();
+			} else {
+				error("Problem occures during process");
+				App.unblockUI();
+			}
+
+		},
+		error: function () {
+			error("Problem occures during process");
+			App.unblockUI();
+		}
+	});
 }
 

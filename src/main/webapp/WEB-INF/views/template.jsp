@@ -23,7 +23,6 @@
 	<%@ include file="include/scripts.jsp" %>
 
 	<script src="resources/js/${page}.js" type="text/javascript"></script>
-
 	<script>
 		$(document).ready(function () {
 			$('.nav-bar li').removeClass('active');

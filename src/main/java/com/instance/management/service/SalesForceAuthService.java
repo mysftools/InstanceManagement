@@ -11,7 +11,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,7 +21,7 @@ public class SalesForceAuthService {
 
 	protected static final String loginHost = "https://login.salesforce.com";
 
-	public Map<String, Object> login(String username, String password, String empID, String secret) {
+	public Map<String, Object> login(String username, String password,String securitycode, String empID, String secret) {
 		Map<String, Object> responsemessage = new HashMap<String, Object>();
 		try {
 			String baseUrl = loginHost + "/services/oauth2/token";
@@ -30,10 +29,10 @@ public class SalesForceAuthService {
 			List<BasicNameValuePair> parametersBody = new ArrayList<BasicNameValuePair>();
 			parametersBody.add(new BasicNameValuePair("grant_type", "password"));
 			parametersBody.add(new BasicNameValuePair("username", username));
-			parametersBody.add(new BasicNameValuePair("password", password));
+			parametersBody.add(new BasicNameValuePair("password", password+securitycode));
 			parametersBody.add(new BasicNameValuePair("client_id", empID));
 			parametersBody.add(new BasicNameValuePair("client_secret", secret));
-			oauthPost.setEntity(new UrlEncodedFormEntity(parametersBody, HTTP.UTF_8));
+			oauthPost.setEntity(new UrlEncodedFormEntity(parametersBody));
 			CloseableHttpClient client = HttpClients.createDefault();
 			HttpResponse response = client.execute(oauthPost);
 			String res = EntityUtils.toString(response.getEntity());

@@ -24,9 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.instance.management.backup.BackUpService;
 import com.instance.management.model.BackUpMetaModel;
+import com.instance.management.model.CompanyMetaModel;
 import com.instance.management.model.InstanceMetaModel;
-import com.instance.management.model.UserMetaModel;
 import com.instance.management.reposetory.BackUpReposetory;
+import com.instance.management.reposetory.CompanyReposetory;
 import com.instance.management.reposetory.InstanceReposetory;
 import com.instance.management.reposetory.UserReposetory;
 import com.instance.management.system.DirPath;
@@ -37,6 +38,9 @@ public class BackupController {
 
 	@Autowired
 	BackUpService backUpService;
+	
+	@Autowired
+	CompanyReposetory companyReposetory;
 
 	@Autowired
 	BackUpReposetory backUpReposetory;
@@ -149,15 +153,15 @@ public class BackupController {
 				response.sendRedirect("/");
 				return null;
 			}
-			UserMetaModel userMetaModel = userrepo.findBytoken(session.getAttribute("token").toString());
+			CompanyMetaModel companyMetaModel= companyReposetory.findBytoken(session.getAttribute("company").toString());
 			List<InstanceMetaModel> instanceMetaModels = instanceReposetory
 					.findBytoken(session.getAttribute("token").toString());
 			map = new HashMap<String, Object>();
 			map.put("status", true);
 			map.put("message", "Data back up successfully");
-			map.put("totalcalls", userMetaModel.getCalls());
-			map.put("remainingcalls", userMetaModel.getRemainingCalls());
 			map.put("totalinst", instanceMetaModels.size());
+			map.put("totalcalls", companyMetaModel.getTotalruns());
+			map.put("remainingcalls", companyMetaModel.getRemainingruns());
 			return map;
 		} catch (Exception e) {
 			map = new HashMap<String, Object>();

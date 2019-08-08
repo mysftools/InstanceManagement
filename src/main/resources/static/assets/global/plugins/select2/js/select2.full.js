@@ -2889,7 +2889,6 @@ S2.define('select2/data/select',[
   function SelectAdapter ($element, options) {
     this.$element = $element;
     this.options = options;
-
     SelectAdapter.__super__.constructor.call(this);
   }
 
@@ -2901,9 +2900,7 @@ S2.define('select2/data/select',[
 
     this.$element.find(':selected').each(function () {
       var $option = $(this);
-
       var option = self.item($option);
-
       data.push(option);
     });
 

@@ -53,7 +53,6 @@
 												<th>View</th>
 												<th>User Name</th>
 												<th>User ID</th>
-												<th>Company Name</th>
 												<th>Role</th>
 												<th>Status</th>
 												<th>Action</th>
@@ -114,12 +113,11 @@
 
 						</div>
 					</div>
-
 					<div class="form-group">
-						<input class="form-control placeholder-no-fix" type="text" autocomplete="off"
-							placeholder="Company Name" name="companyname" id="companyname" />
-					</div>
 
+						<select id="multiple" class="form-control select2-multiple"  multiple>
+						</select>
+					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn dark btn-outline" data-dismiss="modal"
 							id="cancle">Close</button>
@@ -146,7 +144,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="modal-header">
-							
+
 							<br />
 							<table style="width: 70%">
 
@@ -160,12 +158,6 @@
 									<th>User ID</th>
 									<td>
 										<div id="userid1"></div>
-									</td>
-								</tr>
-								<tr>
-									<th>Company Name</th>
-									<td>
-										<div id="companyname1"></div>
 									</td>
 								</tr>
 								<tr>
