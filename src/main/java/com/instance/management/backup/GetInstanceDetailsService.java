@@ -61,7 +61,7 @@ public class GetInstanceDetailsService {
 		return custList;
 	}
 
-	public List<CustomerSfInfo> getServerssingle(String filepath,String token) {
+	public List<CustomerSfInfo> getServerssingle(String filepath, String token) {
 		List<CustomerSfInfo> custList = new ArrayList<>();
 
 		try {

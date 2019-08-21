@@ -81,7 +81,7 @@
 									<div class="table-toolbar">
 										<div class="row">
 											<div class="col-md-6">
-												<div class="btn-group">
+												<div class="btn-group">												
 													<button class="btn sbold green" id="new_user"
 														<% if(!session.getAttribute("role").equals("admin")){ %>
 														disabled="disabled" <%} %>> Add New <i class="fa fa-plus"></i>
@@ -196,9 +196,9 @@
 						<div>
 							<div class="progress-info" id="show-api-call">
 								<div class="progress" id="pp1">
-									<span>df</span>
-									<span id="p" style="width: 0%;" class="progress-bar progress-bar-success red-haze">
-									</span>
+									<div id="myProgress">
+										<div id="myBar"></div>
+									</div>
 								</div>
 								<div class="status-title" id="pvalue"></div>
 							</div>
@@ -210,6 +210,7 @@
 						<button type="submit" class="btn green" id="inst">Save</button>
 						<button type="submit" class="btn green" id="inst-update">Update</button>
 						<button type="submit" class="btn green" id="inst-run">Run</button>
+						<button type="submit" class="btn green" id="inst-stop">Stop</button>
 					</div>
 				</form>
 			</div>

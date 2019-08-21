@@ -16,9 +16,9 @@ public class MetadataLoginUtil {
 		final String PASSWORD = pwd + token;
 		String URL = "";
 		if (isSandbox) {
-			URL = "https://test.salesforce.com/services/Soap/u/37.0";
+			URL = "https://test.salesforce.com/services/Soap/u/46.0";
 		} else {
-			URL = "https://salesforce.com/services/Soap/u/37.0";
+			URL = "https://login.salesforce.com/services/Soap/u/46.0";
 		}
 		final LoginResult loginResult = loginToSalesforce(USERNAME, PASSWORD, URL);
 		return createMetadataConnection(loginResult);
@@ -30,7 +30,6 @@ public class MetadataLoginUtil {
 		config.setAuthEndpoint(loginUrl);
 		config.setServiceEndpoint(loginUrl);
 		config.setManualLogin(true);
-		System.out.println("password:" + password);
 		// return null;
 		return (new PartnerConnection(config)).login(username, password);
 	}

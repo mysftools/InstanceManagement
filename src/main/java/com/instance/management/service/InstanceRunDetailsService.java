@@ -64,15 +64,13 @@ public class InstanceRunDetailsService {
 			map.put("message", "Runs Updated successfully");
 			return map;
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			map.put("status", false);
 			map.put("message", "some error has bean occured");
 			return map;
 		}
 	}
 
-	public Object progressbar() {
-		return null;
-	}
+	
 
 }

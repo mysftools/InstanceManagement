@@ -1,7 +1,7 @@
 package com.instance.management.backup;
 
 public class CustomerSfInfo {
-	
+
 	public String user;
 	public String pwd;
 	public String token;

@@ -106,13 +106,50 @@ jQuery(document).ready(function () {
 		$("#instence").show();
 		$("#inst").show();
 		$("#inst-run").hide();
+		$("#inst-stop").hide();
 		$("#apex1").hide();
 		$("#inst-update").hide();
 		$(".register-form")[0].reset();
 		$('.modal-title').text("Enter Details");
 		$('#new_inst').modal('show');
 	});
-	
+	$("#inst-stop").click(function () {
+		$.ajax({
+			type: 'POST',
+			url: "apex/stop?instid="+ ($("#uid").val()),
+			dataType: "JSON",
+			async: true,
+			
+			processData: false,
+			cache: false,
+			contentType: "application/json",
+			beforeSend: function () {
+
+				App.blockUI({
+					boxed: true,
+					message: "Please Wait..."
+				});
+			},
+			success: function (data) {
+				if (data.status) {
+					success(data.message);
+					postprocess();
+				} else if (!data.status) {
+					error("Problem occures during process");
+					App.unblockUI();
+				} else {
+					error("Problem occures during process");
+
+					App.unblockUI();
+				}
+
+			},
+			error: function () {
+
+				App.unblockUI();
+			}
+		});
+	});
 
 });
 
@@ -297,18 +334,15 @@ $("#inst").click(function () {
 	};
 });
 
-
+var id= 1;
 
 function progress(token,name) {
-	var form=new FormData();
-    form.append("instancetoken",token);
 	
 	$.ajax({
 		type: 'POST',
 		url: "apex/getprogress?instancetoken="+token,
 		dataType: "JSON",
 		async: false,
-		data:form,
 		processData: false,
 		cache: false,
 		contentType: "application/json",
@@ -321,14 +355,15 @@ function progress(token,name) {
 		success: function (data) {
 			viewcounter();
 			if (data.status) {
-				$("#p").attr('style', 'width: ' +data.response['percentage'] + '%; color : red;');
-				$("#pvalue").text(data.response['percentage'] + "%");
+				var elem = document.getElementById("myBar");
+				elem.style.width = data.response['percentage'] + '%';
 				$("#show-api-call").show();
 				$("#inst").hide();
 				$("#apex1").show();
+				$("#inst-stop").show();
 				$("#instence").hide();
 				$("#inst-update").hide();
-				$("#inst-run").show();
+				$("#inst-run").hide();
 				$(".register-form")[0].reset();
 				$('.modal-title').text('Add Instance Details');
 				$('#new_inst').modal('show');
@@ -336,7 +371,7 @@ function progress(token,name) {
 				$('#instname').text(name);
 				$("#apex").attr('disabled','disabled');
 				$("#call").attr('disabled','disabled');
-				setInterval("settime()", 1000);
+				
 				App.unblockUI();
 			} else{ 
 				if (data.code==102) {
@@ -362,11 +397,13 @@ function runapex(token, name) {
 	if (n <= 0) {
 		warnUser();
 	} else {
-
+		$("#apex").attr('disabled', false);
+		$("#call").attr('disabled', false);
 		$("#show-api-call").hide();
 		$("#inst").hide();
 		$("#apex1").show();
 		$("#instence").hide();
+		$("#inst-stop").hide();
 		$("#inst-update").hide();
 		$("#inst-run").show();
 		$(".register-form")[0].reset();
@@ -379,8 +416,7 @@ function runapex(token, name) {
 
 }
 function settime(){
-	while ($('#new_inst').is(':visible') && $("#inst-run").is(':visible')&& $("#show-api-call").is(':visible')) {
-		console.log('ddd');
+	
 		$.ajax({
 			type: 'POST',
 			url: "apex/getprogress?instancetoken="+($("#uid").val()),
@@ -398,14 +434,14 @@ function settime(){
 			success: function (data) {
 				viewcounter();
 				if (data.status) {
-					$("#p").attr('style', 'width: ' +data.response['percentage'] + '%; color : red;');
-					$("#pvalue").text(data.response['percentage'] + "%");
-					$("#apex").attr('disabled','disabled');
-					$("#call").attr('disabled','disabled');
+					var elem = document.getElementById("myBar");
+					elem.style.width = data.response['percentage'] + '%';
+					$('#pvalue').text(data.response['percentage']+"%");
 					App.unblockUI();
 				} else{ 
 					if (data.code==102) {
-						runapex(token, name);
+						clearInterval(id);
+						runapex($('[name=uid]').val(), $('#instname').text());
 						App.unblockUI();
 					}else {
 						error("Problem occures during process pr1");
@@ -420,8 +456,8 @@ function settime(){
 			}
 		});	
 		
-		//progress($('[name=uid]').val(),$('#instname').text(name));
-	};
+		// progress($('[name=uid]').val(),$('#instname').text(name));
+	
 	
 }
 
@@ -441,6 +477,10 @@ $("#inst-run").click(function () {
 			max: n
 		});
 	} else {
+		console.log();
+		$("#inst-stop").show();
+		$("#inst-run").hide();
+		id=	setInterval("settime()", 1000);
 		runcode(form);
 	};
 
@@ -458,17 +498,15 @@ function runcode(form) {
 			cache: false,
 			contentType: "application/json",
 			beforeSend: function () {
-				App.blockUI({
-					boxed: true,
-					message: "Please Wait..."
-				});
+				
 			},
 			success: function (data) {
 				viewcounter();
 				if (data.status) {
 					success("DONE");
 					App.unblockUI();
-					//postprocess();
+					
+					// postprocess();
 				} else if (!data.status) {
 					error("Problem occures during process c1");
 					App.unblockUI();
@@ -478,14 +516,18 @@ function runcode(form) {
 				}
 			},
 			error: function () {
+				$("#apex").attr('disabled','disabled');
+				$("#call").attr('disabled','disabled');
 				viewcounter();
-				error("Problem occures during process c3");
+				
+				//error("Problem occures during process c3");
 				App.unblockUI();
-				postprocess();
+				
 			}
 		});
 	}
 }
+
 
 
 function getinst(token) {

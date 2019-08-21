@@ -16,8 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.instance.management.model.UserMetaModel;
 import com.instance.management.reposetory.UserReposetory;
 
-
-
 @Controller
 @RequestMapping("/")
 public class AurthController {
@@ -51,7 +49,8 @@ public class AurthController {
 		UserMetaModel usermodel = userrepo.findByuserid(username);
 		try {
 
-			if (usermodel.getUserid().equals(username) && usermodel.getPassword().equals(password)&&usermodel.isStatus()&&usermodel.isOtpstatus()) {
+			if (usermodel.getUserid().equals(username) && usermodel.getPassword().equals(password)
+					&& usermodel.isStatus() && usermodel.isOtpstatus()) {
 
 				session = request.getSession();
 				session.setAttribute("userid", usermodel.getUserid());

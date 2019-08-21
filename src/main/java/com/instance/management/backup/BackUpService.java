@@ -32,9 +32,9 @@ public class BackUpService {
 	 * }
 	 * 
 	 */
-	public void single(String filepath,String token) {
+	public void single(String filepath, String token) {
 		GetInstanceDetailsService tp = new GetInstanceDetailsService();
-		List<CustomerSfInfo> csfList = tp.getServerssingle(filepath,token);
+		List<CustomerSfInfo> csfList = tp.getServerssingle(filepath, token);
 		for (CustomerSfInfo cs : csfList) {
 			try {
 				new SfMetadataThread(cs).run();

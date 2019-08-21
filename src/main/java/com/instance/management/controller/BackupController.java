@@ -56,7 +56,7 @@ public class BackupController {
 	@Autowired
 	public BackupController() {
 		this.fileStorageLocation = Paths.get("./").toAbsolutePath().normalize();
-
+		
 		try {
 			Files.createDirectories(this.fileStorageLocation);
 		} catch (Exception ex) {

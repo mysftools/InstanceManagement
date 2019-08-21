@@ -23,9 +23,21 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-mail</artifactId>
+			<groupId>com.force.api</groupId>
+			<artifactId>force-wsc</artifactId>
+			<version>46.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.force.api</groupId>
+			<artifactId>force-metadata-api</artifactId>
+			<version>46.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.force.api</groupId>
+			<artifactId>force-partner-api</artifactId>
+			<version>46.0.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>

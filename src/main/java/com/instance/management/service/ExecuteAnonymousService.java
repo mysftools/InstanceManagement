@@ -61,8 +61,8 @@ public class ExecuteAnonymousService implements Runnable {
 			map1.put(Thread.currentThread().getId(), true);
 			InstanceMetaModel instanceMetaModel = instancerepo.findByinstToken(apexModel.getToken());
 			Map<String, Object> responsemessage = authService.login(instanceMetaModel.getUsername(),
-					instanceMetaModel.getPassword(),instanceMetaModel.getSecurityCode(), instanceMetaModel.getClientkey(),
-					instanceMetaModel.getClientSecreat());
+					instanceMetaModel.getPassword(), instanceMetaModel.getSecurityCode(),
+					instanceMetaModel.getClientkey(), instanceMetaModel.getClientSecreat());
 			if (Boolean.parseBoolean(responsemessage.get("status").toString())) {
 				HttpHeaders headers = new HttpHeaders();
 				headers.setContentType(MediaType.APPLICATION_JSON);
@@ -77,7 +77,7 @@ public class ExecuteAnonymousService implements Runnable {
 				Map<String, Object> map = instanceRunDetailsService.add(instanceRunDetailsModel, session);
 				String instdetailtoken = map.get("token").toString();
 				float p = (float) (double) 100 / apexModel.getNum();
-				float p1=p;
+				float p1 = p;
 				System.out.println(p);
 				ProgressBarMetaModel progressBarMetaModel = new ProgressBarMetaModel();
 				progressBarMetaModel.setInstrundtoken(instdetailtoken);
@@ -85,42 +85,44 @@ public class ExecuteAnonymousService implements Runnable {
 				progressBarMetaModel.setInsttoken(instanceMetaModel.getInstToken());
 				progressBarMetaModel.setThreadId(Thread.currentThread().getId());
 				progressBarReposetory.save(progressBarMetaModel);
-
-				for (int i = 0; i < apexModel.getNum(); i++) {
-					if (map1.get(Thread.currentThread().getId())) {
-						ProgressBarMetaModel progressBarMetaModel1 = progressBarReposetory
-								.findByinstrundtoken(instdetailtoken);
-						p = p +p1;
-						System.out.println(p);
-						progressBarMetaModel1.setPercentage((int)p);
+				int r=1;
+				for (int i = 1; i < apexModel.getNum(); i++) {
+					ProgressBarMetaModel progressBarMetaModel1 = progressBarReposetory
+							.findByinstrundtoken(instdetailtoken);
+					if (map1.get(Thread.currentThread().getId()) &&progressBarMetaModel1!=null) {
+						
+						p = p + p1;
+						r++;
+						progressBarMetaModel1.setPercentage((int) p);
 						progressBarReposetory.save(progressBarMetaModel1);
 						RestTemplate restTemplate = new RestTemplate();
 						ResponseEntity<AccountResponse> salesforceTestData = restTemplate.exchange(
 								responsemessage.get("instance_url").toString() + "/services/data/v"
-										+instanceMetaModel.getApiversion() + "/tooling/executeAnonymous/?"
+										+ instanceMetaModel.getApiversion() + "/tooling/executeAnonymous/?"
 										+ "anonymousBody=" + apexModel.getCode(),
 								HttpMethod.GET, request, AccountResponse.class);
 						responsemessage.put("data", salesforceTestData.getBody());
+					}else {
+						break;
 					}
 
 				}
 				map1.put(Thread.currentThread().getId(), false);
-				instanceRunDetailsService.updatecalls(Integer.parseInt(responsemessage.get("runs").toString()),
+				instanceRunDetailsService.updatecalls(r,
 						session);
 				ProgressBarMetaModel progressBarMetaModel1 = progressBarReposetory.findByinstrundtoken(instdetailtoken);
 				progressBarReposetory.delete(progressBarMetaModel1);
-				 runapex(responsemessage);
+				runapex(responsemessage);
 			} else {
 				runapex(responsemessage);
 			}
-		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public Object runapex(Map<String, Object> responsemessage) {
-		return responsemessage;		
+		return responsemessage;
 	}
-	
+
 }

@@ -77,7 +77,9 @@ public class RunApexController {
 		try {
 			ProgressBarMetaModel progressBarMetaModel = progressBarReposetory.findByinsttoken(instid);
 			if (progressBarMetaModel != null) {
+				System.out.println(progressBarMetaModel.getThreadId());
 				ExecuteAnonymousService.map1.put(progressBarMetaModel.getThreadId(), false);
+				progressBarReposetory.delete(progressBarMetaModel);
 				map.put("status", true);
 				map.put("message", "Execution stoped successfully");
 				return map;
@@ -87,7 +89,7 @@ public class RunApexController {
 				return map;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			map.put("status", false);
 			map.put("message", "some error accured during execution");
 			return map;
