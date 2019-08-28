@@ -37,7 +37,17 @@
 			<artifactId>force-partner-api</artifactId>
 			<version>46.0.0</version>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/com.force.api/force-apex-api -->
+		<dependency>
+			<groupId>com.force.api</groupId>
+			<artifactId>force-apex-api</artifactId>
+			<version>46.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.razorpay</groupId>
+			<artifactId>razorpay-java</artifactId>
+			<version>1.3.8</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>

@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,11 +27,13 @@ import com.instance.management.reposetory.InstanceReposetory;
 import com.instance.management.reposetory.InstanceRunDetailsReposetory;
 import com.instance.management.reposetory.UserReposetory;
 import com.instance.management.system.RandomToken;
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
 
 @Controller
 @RequestMapping("/instancemanagement")
 public class InstanceController {
-	
+
 	@Autowired
 	UserReposetory userrepo;
 
@@ -61,15 +64,15 @@ public class InstanceController {
 			return null;
 		}
 		if (session.getAttribute("role").equals("admin")) {
-			
+
 			map.put("role", session.getAttribute("role"));
 			map.put("status", true);
 			map.put("response", instanceReposetory.findBytoken(session.getAttribute("token").toString()));
 			return map;
 		} else {
-			UserMetaModel usermodel =userrepo.findBytoken(session.getAttribute("token").toString());
-			List<InstanceMetaModel> instanceMetaModels=new ArrayList<InstanceMetaModel>();
-			String list=usermodel.getListInst();
+			UserMetaModel usermodel = userrepo.findBytoken(session.getAttribute("token").toString());
+			List<InstanceMetaModel> instanceMetaModels = new ArrayList<InstanceMetaModel>();
+			String list = usermodel.getListInst();
 			for (String instid : list.split(",")) {
 				instanceMetaModels.add(instanceReposetory.findByinstToken(instid));
 			}
@@ -78,7 +81,7 @@ public class InstanceController {
 			map.put("response", instanceMetaModels);
 			return map;
 		}
-		
+
 	}
 
 	@PostMapping("/getlist")
@@ -172,8 +175,8 @@ public class InstanceController {
 	}
 
 	@PostMapping("/updatebyid")
-	public @ResponseBody Object update(@RequestBody InstanceUpdateModel instanceUpdateModel, HttpServletResponse response,
-			HttpSession session) throws Exception {
+	public @ResponseBody Object update(@RequestBody InstanceUpdateModel instanceUpdateModel,
+			HttpServletResponse response, HttpSession session) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (!LoginController.userValidate(session)) {
 			response.sendRedirect("/");
@@ -197,11 +200,30 @@ public class InstanceController {
 			map.put("response", "Deleted successfully");
 			return map;
 		} else {
-			
+
 			map.put("status", false);
 			map.put("message", "no data found");
 			return map;
 		}
 
+	}
+
+	@PostMapping("/ordercreat")
+	public @ResponseBody Object testorder(@RequestParam int amount) {
+		try {
+			RazorpayClient razorpay = new RazorpayClient("rzp_test_8sJa3x6gA2CVoj", "BJIKGCUHxsQ6cCL59JO03MiJ");
+			JSONObject orderRequest = new JSONObject();
+			orderRequest.put("amount", amount);
+			orderRequest.put("currency", "INR");
+			orderRequest.put("receipt", "rcptid #5");
+			orderRequest.put("payment_capture", true);
+
+			Order orders = razorpay.Orders.create(orderRequest);
+
+			return orders.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

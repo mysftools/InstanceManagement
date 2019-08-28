@@ -366,7 +366,7 @@
 												</div> -->
 											</div>
 											<div class="price-table-footer">
-												<button type="button" class="btn grey-salsa btn-outline sbold uppercase bold" onclick="purchaseruns(50)">Get It</button>
+												<button type="button" class="btn grey-salsa btn-outline sbold uppercase bold" onclick="purchaseruns(500,50)">Get It</button>
 											</div>
 										</div>
 									</div>
@@ -407,7 +407,7 @@
 												</div> -->
 											</div>
 											<div class="price-table-footer">
-												<button type="button" class="btn grey-salsa btn-outline sbold uppercase bold" onclick="purchaseruns(100)">Get It</button>
+												<button type="button" class="btn grey-salsa btn-outline sbold uppercase bold" onclick="purchaseruns(1000,100)">Get It</button>
 											</div>
 										</div>
 									</div>
@@ -449,7 +449,7 @@
 												</div> -->
 											</div>
 											<div class="price-table-footer">
-												<button type="button" class="btn green featured-price uppercase" onclick="purchaseruns(500)">Get it now!</button>
+												<button type="button" class="btn green featured-price uppercase" onclick="purchaseruns(5000,500)">Get it now!</button>
 											</div>
 										</div>
 									</div>
@@ -490,7 +490,7 @@
 												</div> -->
 											</div>
 											<div class="price-table-footer">
-												<button type="button" class="btn grey-salsa btn-outline sbold uppercase bold" onclick="purchaseruns(1000)">Get It</button>
+												<button type="button" class="btn grey-salsa btn-outline sbold uppercase bold" onclick="purchaseruns(10000,1000)">Get It</button>
 											</div>
 										</div>
 									</div>
@@ -505,3 +505,4 @@
 	</div>
 	<!-- /.modal-dialog -->
 </div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
