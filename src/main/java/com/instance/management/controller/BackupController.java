@@ -26,6 +26,7 @@ import com.instance.management.backup.BackUpService;
 import com.instance.management.model.BackUpMetaModel;
 import com.instance.management.model.CompanyMetaModel;
 import com.instance.management.model.InstanceMetaModel;
+import com.instance.management.model.UserMetaModel;
 import com.instance.management.reposetory.BackUpReposetory;
 import com.instance.management.reposetory.CompanyReposetory;
 import com.instance.management.reposetory.InstanceReposetory;
@@ -38,7 +39,7 @@ public class BackupController {
 
 	@Autowired
 	BackUpService backUpService;
-	
+
 	@Autowired
 	CompanyReposetory companyReposetory;
 
@@ -56,7 +57,7 @@ public class BackupController {
 	@Autowired
 	public BackupController() {
 		this.fileStorageLocation = Paths.get("./").toAbsolutePath().normalize();
-		
+
 		try {
 			Files.createDirectories(this.fileStorageLocation);
 		} catch (Exception ex) {
@@ -78,8 +79,8 @@ public class BackupController {
 
 	@PostMapping("/takesingilebackup")
 	@ResponseBody
-	public Object takesingleBackup(@RequestParam("filepath") MultipartFile filepath,@RequestParam String uid,  HttpServletResponse response,HttpSession session)
-			throws Exception {
+	public Object takesingleBackup(@RequestParam("filepath") MultipartFile filepath, @RequestParam String uid,
+			HttpServletResponse response, HttpSession session) throws Exception {
 		if (!LoginController.userValidate(session)) {
 			response.sendRedirect("/");
 			return null;
@@ -105,14 +106,14 @@ public class BackupController {
 
 	@PostMapping("/backuphistory")
 	@ResponseBody
-	public Object backuphistory(HttpSession session,HttpServletResponse response)throws Exception {
+	public Object backuphistory(HttpSession session, HttpServletResponse response) throws Exception {
 		if (!LoginController.userValidate(session)) {
 			response.sendRedirect("/");
 			return null;
 		}
 		return backUpReposetory.findByuserid(session.getAttribute("token").toString());
 	}
-	
+
 	/*
 	 * @PostMapping("/backupall") public @ResponseBody Object
 	 * backall(HttpServletResponse response, HttpSession session) { Map<String,
@@ -153,17 +154,34 @@ public class BackupController {
 				response.sendRedirect("/");
 				return null;
 			}
-			CompanyMetaModel companyMetaModel= companyReposetory.findBytoken(session.getAttribute("company").toString());
-			List<InstanceMetaModel> instanceMetaModels = instanceReposetory
-					.findBytoken(session.getAttribute("token").toString());
-			map = new HashMap<String, Object>();
-			map.put("status", true);
-			map.put("message", "Data back up successfully");
-			map.put("totalinst", instanceMetaModels.size());
-			map.put("totalcalls", companyMetaModel.getTotalruns());
-			map.put("remainingcalls", companyMetaModel.getRemainingruns());
-			return map;
+			if (session.getAttribute("role").toString().equals("admin")) {
+				CompanyMetaModel companyMetaModel = companyReposetory
+						.findBytoken(session.getAttribute("company").toString());
+				List<InstanceMetaModel> instanceMetaModels = instanceReposetory
+						.findBytoken(session.getAttribute("token").toString());
+				map = new HashMap<String, Object>();
+				map.put("status", true);
+				map.put("message", "Data back up successfully");
+				map.put("totalinst", instanceMetaModels.size());
+				map.put("totalcalls", companyMetaModel.getTotalruns());
+				map.put("remainingcalls", companyMetaModel.getRemainingruns());
+				return map;
+			} else {
+				CompanyMetaModel companyMetaModel = companyReposetory
+						.findBytoken(session.getAttribute("company").toString());
+				UserMetaModel userMetaModel=userrepo.findBytoken(session.getAttribute("token").toString());
+				
+				map = new HashMap<String, Object>();
+				map.put("status", true);
+				map.put("message", "Data back up successfully");
+				map.put("totalinst",userMetaModel.getListInst().split(",").length);
+				map.put("totalcalls", companyMetaModel.getTotalruns());
+				map.put("remainingcalls", companyMetaModel.getRemainingruns());
+				return map;
+			}
+
 		} catch (Exception e) {
+			e.printStackTrace();
 			map = new HashMap<String, Object>();
 			map.put("status", false);
 			map.put("message", "Some error has bean occured");

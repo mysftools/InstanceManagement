@@ -153,7 +153,7 @@ jQuery(document).ready(function () {
 
 });
 
-
+var role="";
 function loadtable() {
 	$.ajax({
 		type: 'POST',
@@ -172,7 +172,8 @@ function loadtable() {
 		},
 		success: function (obj) {
 			if (obj.status) {
-				var role = obj.role;
+				 role = obj.role;
+				
 				$('#listMember').DataTable({
 					data: obj.response,
 					columns: [
@@ -216,7 +217,7 @@ function loadtable() {
 								if (role == 'admin') {
 									str = '<a  onclick="viewUser(' + "'" + row.instToken + "'" + ')" >' + "" + row.nameOfInstance + "" + '</a>';
 								} else {
-									str = '<a  onclick="alertadmin()" >' + "" + row.nameOfInstance + "" + '</a>';
+									str = row.nameOfInstance;
 								}
 								return str;
 							}
@@ -226,16 +227,16 @@ function loadtable() {
 							data: "id",
 							mRender: function (data, type, row) {
 								var str;
+								var d= '"'+row.instToken + '","' + row.nameOfInstance+'"' ;
 								if (role == 'admin') {
 									str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
-										"onclick=progress('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
+											"onclick='progress("+d+")' > Run Apex" +
 										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=backup('" + row.instToken + "')> BackUp" +
 										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> <i class='fa fa-history'></i>" +
 										"</button>";
 								} else {
 									str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
-										"onclick=progress('" + row.instToken + "','" + row.nameOfInstance + "') > Run Apex" +
-										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=alertadmin()> BackUp" +
+										"onclick='progress("+d+")' > Run Apex" +
 										"</button>" + "<button  class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> <i class='fa fa-history'></i>" +
 										"</button>";
 								}
@@ -247,6 +248,14 @@ function loadtable() {
 					]
 				});
 				App.unblockUI();
+				if (role != 'admin') {
+					
+					$("#listMember tr").each(function(){
+					   $(this).find("td:first").hide(); //put elements into array
+					});
+					 $("th:first").hide();
+					 $("#new_user").hide();
+				}
 			} else if (!obj.status) {
 				error("Problem occures during process");
 				App.unblockUI();
@@ -290,7 +299,7 @@ $("#inst").click(function () {
 		"username": $("#username").val(),
 		"password": $("#password").val(),
 		"securityCode": $("#securityCode").val(),
-		"apiversion": $("apiversion").val()
+		"apiversion": $("#apiversion").val()
 	};
 
 	if (form.nameOfInstance != "" && form.type != "" && form.securityCode != "") {
@@ -395,7 +404,12 @@ function runapex(token, name) {
 	viewcounter();
 	var n = Number($("#sc").text());
 	if (n <= 0) {
-		warnUser();
+		if (role == 'admin') {
+			warnadmin();
+		}else {
+			warnuser();
+		}
+		
 	} else {
 		$("#apex").attr('disabled', false);
 		$("#call").attr('disabled', false);
@@ -831,7 +845,7 @@ function sleep(milliseconds) {
 }
 
 
-function warnUser() {
+function warnadmin() {
 	swal({
 		title: "Error",
 		text: "You have no run's remaining ,Please purchase it",
@@ -850,6 +864,10 @@ function warnUser() {
 	});
 }
 
+
+function warnuser() {
+	swal("NO run's", "Please contact admin", "warning");
+}
 function price(){
 	$('#price').modal('show');
 }

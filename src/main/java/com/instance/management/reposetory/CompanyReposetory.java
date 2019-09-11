@@ -7,5 +7,6 @@ import com.instance.management.model.CompanyMetaModel;
 public interface CompanyReposetory extends JpaRepository<CompanyMetaModel, Integer>{
 	
 	CompanyMetaModel findBytoken(String token);
+	CompanyMetaModel findBycompanyname(String token);
 
 }

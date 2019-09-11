@@ -33,13 +33,21 @@ public class CompanyManagementController {
 	public @ResponseBody Object addcompany(@RequestBody CompanyModel companyModel) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			CompanyMetaModel companyMetaModel = new CompanyMetaModel();
-			companyMetaModel.setCompanyname(companyModel.getCompanyname());
-			companyMetaModel.setToken(randomtoken.getToken(8));
-			companyReposetory.save(companyMetaModel);
-			map.put("status", true);
-			map.put("message", "company added successfully");
-			return map;
+			CompanyMetaModel companyMetaModel1 = companyReposetory.findBycompanyname(companyModel.getCompanyname());
+			if (companyMetaModel1 == null) {
+				CompanyMetaModel companyMetaModel = new CompanyMetaModel();
+				companyMetaModel.setCompanyname(companyModel.getCompanyname());
+				companyMetaModel.setToken(randomtoken.getToken(8));
+				companyReposetory.save(companyMetaModel);
+				map.put("status", true);
+				map.put("message", "company added successfully");
+				return map;
+			} else {
+				map.put("status", true);
+				map.put("message", "company added successfully");
+				return map;
+			}
+
 		} catch (Exception e) {
 			map.put("status", false);
 			map.put("message", "some error has bean occured");
@@ -62,8 +70,6 @@ public class CompanyManagementController {
 		}
 	}
 
-
-	
 	@PostMapping("/purchase")
 	public @ResponseBody Object updatecompany(@RequestParam int calls, HttpServletResponse response,
 			HttpSession session) {
@@ -73,7 +79,8 @@ public class CompanyManagementController {
 				response.sendRedirect("/");
 				return null;
 			}
-			CompanyMetaModel companyMetaModel= companyReposetory.findBytoken(session.getAttribute("company").toString());
+			CompanyMetaModel companyMetaModel = companyReposetory
+					.findBytoken(session.getAttribute("company").toString());
 			companyMetaModel.setTotalruns(calls);
 			companyMetaModel.setRemainingruns(calls);
 			companyReposetory.save(companyMetaModel);
@@ -86,8 +93,7 @@ public class CompanyManagementController {
 			map.put("message", "some error has bean occured");
 			return map;
 		}
-		
-		
+
 	}
-	
+
 }

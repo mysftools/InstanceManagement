@@ -36,9 +36,9 @@ public class OtpManagementController {
 	UserReposetory userrepo;
 
 	@GetMapping("")
-	public String index(@RequestParam String username, Model model) throws Exception {
+	public String index(@RequestParam String userid, Model model) throws Exception {
 	
-		model.addAttribute("email", username);
+		model.addAttribute("email", userid);
 		model.addAttribute("error", error);
 	
 		return "otp";
@@ -58,7 +58,7 @@ public class OtpManagementController {
 				long tenAgo = System.currentTimeMillis() - TEN_MINUTES;
 				if (otpModel.getSendTime().getTime() < tenAgo) {
 					error= "Otp has bean expired";
-					response.sendRedirect("/otp?username=" + username);
+					response.sendRedirect("/otp?userid=" + username);
 					return "otp";
 				} else {
 					if (otpModel.getUsername().equals(s)) {
@@ -73,25 +73,25 @@ public class OtpManagementController {
 							return null;
 						} else {
 							error= "Otp did not match";
-							response.sendRedirect("/otp?username=" +username);
+							response.sendRedirect("/otp?userid=" +username);
 							return null;
 						}
 					} else {
 						error= "Some error has bean occured please try again";
-						response.sendRedirect("/otp?username=" +username);
+						response.sendRedirect("/otp?userid=" +username);
 						return null;
 					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				error= "Otp did not match";
-				response.sendRedirect("/otp?username=" +username);
+				response.sendRedirect("/otp?userid=" +username);
 				return null;
 			}
 		} else {
 			System.out.println("null");
 			error= "Incorrect Otp";
-			response.sendRedirect("/otp?username=" +username);
+			response.sendRedirect("/otp?userid=" +username);
 			return "otp";
 		}
 	}
@@ -99,7 +99,7 @@ public class OtpManagementController {
 	@PostMapping("/resend")
 	public String resendotp(Model model, @RequestBody Map<String, String> map) throws Exception {
 		model.addAttribute("error", "Otp has been send to you mail");
-		otpSendService.sendotp(map.get("username"));
+		otpSendService.sendotp(map.get("userid"));
 		return "otp";
 	}
 

@@ -95,7 +95,7 @@
 										id="listMember">
 										<thead>
 											<tr>
-												<th>View</th>
+												<th></th>
 												<th>Type</th>
 												<th>Name Of Customer</th>
 												<th>Api Version </th>
@@ -141,7 +141,7 @@
 						</div>
 						<div class="form-group" id="nameOfInstance1">
 							<input class="form-control placeholder-no-fix" type="text" autocomplete="off"
-								placeholder="Instance Nmae" name="nameOfInstance" id="nameOfInstance" />
+								placeholder="Instance Name" name="nameOfInstance" id="nameOfInstance" />
 						</div>
 						<div class="form-group">
 							<input class="form-control placeholder-no-fix" type="text" autocomplete="off"

@@ -58,11 +58,19 @@ public class UserManagementController {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		if (userModel.getPassword().equals(userModel.getRpassword())) {
-			CompanyMetaModel companyMetaModel=new CompanyMetaModel();
-			companyMetaModel.setCompanyname(userModel.getCompanyId().toUpperCase());
-			companyMetaModel.setToken(randomToken.getToken(10));
-			companyMetaModel.setTotalruns(0);
-			companyMetaModel.setRemainingruns(0);
+			
+			
+			CompanyMetaModel companyMetaModel=companyReposetory.findBycompanyname(userModel.getCompanyId().toUpperCase());
+			
+			if (companyMetaModel==null) {
+				companyMetaModel=new CompanyMetaModel();
+				companyMetaModel.setCompanyname(userModel.getCompanyId().toUpperCase());
+				companyMetaModel.setToken(randomToken.getToken(10));
+				companyMetaModel.setTotalruns(0);
+				companyMetaModel.setRemainingruns(0);
+			}
+			
+			
 			
 			UserMetaModel userMetaModel = new UserMetaModel();
 			userMetaModel.setUsername(userModel.getUsername());

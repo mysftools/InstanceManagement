@@ -98,7 +98,5 @@ public class PaymentController {
 			map.put("message", "Some Problem has bean occured");
 			return map;
 		}
-
-	
 	}
 }
