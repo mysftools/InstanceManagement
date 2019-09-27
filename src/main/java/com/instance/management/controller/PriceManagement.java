@@ -26,7 +26,7 @@ public class PriceManagement {
 			map=new HashMap<String, Object>();
 			map.put("status", true);
 			map.put("code", 200);
-			map.put("response", priceReposetory.findAll());
+			map.put("response", priceReposetory.findBystatus(true));
 			return map;
 		} catch (Exception e) {
 			map=new HashMap<String, Object>();

@@ -22,6 +22,10 @@ public class OrderMetaModel {
 	Date orderTime;
 	int amountpaied;
 	String token;
+	String companyName;
+	String companyId;
+	String planname;
+	String planid;
 	
 	public int getId() {
 		return id;
@@ -71,4 +75,29 @@ public class OrderMetaModel {
 	public void setToken(String token) {
 		this.token = token;
 	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	public String getCompanyId() {
+		return companyId;
+	}
+	public void setCompanyId(String companyId) {
+		this.companyId = companyId;
+	}
+	public String getPlanname() {
+		return planname;
+	}
+	public void setPlanname(String planname) {
+		this.planname = planname;
+	}
+	public String getPlanid() {
+		return planid;
+	}
+	public void setPlanid(String planid) {
+		this.planid = planid;
+	}
+	
 }

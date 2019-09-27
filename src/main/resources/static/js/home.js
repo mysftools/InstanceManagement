@@ -870,50 +870,13 @@ function price() {
 	$('#price').modal('show');
 }
 
-function purchaseruns(count) {
-	console.log(count);
-	$.ajax({
-		type: 'POST',
-		url: "company/purchase?calls=" + count,
-		dataType: "JSON",
-		async: true,
-		processData: false,
-		cache: false,
-		contentType: "application/json",
-		beforeSend: function () {
 
-			App.blockUI({
-				boxed: true,
-				message: "Please Wait..."
-			});
-		},
-		success: function (data) {
-			if (data.status) {
-				success(data.message);
-				$('#price').modal('hide');
-				App.unblockUI();
-				viewcounter();
-			} else if (!data.status) {
-				error("Problem occures during process");
-				App.unblockUI();
-			} else {
-				error("Problem occures during process");
-				App.unblockUI();
-			}
-		},
-		error: function () {
-			error("Problem occures during process");
-			App.unblockUI();
-		}
-	});
 
-}
-
-function purchaseruns(p, run) {
+function purchaseruns(p) {
 
 	$.ajax({
 		type: 'POST',
-		url: "/payment/ordercreat?amount=" + p,
+		url: "/payment/ordercreat?packid=" + p,
 		dataType: "JSON",
 		async: false,
 		processData: false,
@@ -939,9 +902,11 @@ function purchaseruns(p, run) {
 					"handler": function (response) {
 						var form = {
 							"razorpay_payment_id": response.razorpay_payment_id,
-							"razorpay_payment_id": response.razorpay_payment_id,
+							"razorpay_order_id": response.razorpay_order_id,
 							"razorpay_signature": response.razorpay_signature,
-							"runs": run
+							"runs": data.runs,
+							"packid":data.packid,
+							"packname":data.packname
 						};
 						updateruns(form);
 
@@ -1018,7 +983,8 @@ function loadpricetable() {
 												'</div>' +
 											'</div>' +
 											'<div class="price-table-footer">' +
-												'<button type="button"class="btn grey-salsa btn-outline sbold uppercase bold"onclick="purchaseruns('+data.response[i].price+','+data.response[i].runs+')">Get It</button>' +
+												'<button type="button"class="btn grey-salsa btn-outline sbold uppercase bold" '+
+												'onclick="purchaseruns(' + "'" + data.response[i].token + "'" + ')">Get It</button>' +
 											'</div>' +
 										'</div>' +
 									'</div>'+
