@@ -18,20 +18,22 @@ public class UserMetaModel {
 	String username;
 
 	String userid;
-	
+
 	String token;
 
 	String password;
-	
+
 	boolean Otpstatus;
 
 	String companyId;
-	
+
 	String role;
-	
-	@Column(length=1024)
+
+	String companyName;
+
+	@Column(length = 1024)
 	String listInst;
-	
+
 	int attempt;
 
 	boolean status;
@@ -124,5 +126,12 @@ public class UserMetaModel {
 		this.status = status;
 	}
 
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
 
 }

@@ -1,5 +1,7 @@
 package com.instance.management.model;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,8 +19,10 @@ public class OrderMetaModel {
 	int amount;
 	String orderid;
 	String email;
-	String orderTime;
+	Date orderTime;
 	int amountpaied;
+	String token;
+	
 	public int getId() {
 		return id;
 	}
@@ -49,10 +53,10 @@ public class OrderMetaModel {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getOrderTime() {
+	public Date getOrderTime() {
 		return orderTime;
 	}
-	public void setOrderTime(String orderTime) {
+	public void setOrderTime(Date orderTime) {
 		this.orderTime = orderTime;
 	}
 	public int getAmountpaied() {
@@ -60,5 +64,11 @@ public class OrderMetaModel {
 	}
 	public void setAmountpaied(int amountpaied) {
 		this.amountpaied = amountpaied;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

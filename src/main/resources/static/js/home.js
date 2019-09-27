@@ -101,6 +101,7 @@ jQuery(document).ready(function () {
 	viewcounter();
 	Login.init();
 	loadtable();
+	loadpricetable();
 	$("#new_user").click(function () {
 
 		$("#instence").show();
@@ -116,10 +117,10 @@ jQuery(document).ready(function () {
 	$("#inst-stop").click(function () {
 		$.ajax({
 			type: 'POST',
-			url: "apex/stop?instid="+ ($("#uid").val()),
+			url: "apex/stop?instid=" + ($("#uid").val()),
 			dataType: "JSON",
 			async: true,
-			
+
 			processData: false,
 			cache: false,
 			contentType: "application/json",
@@ -153,7 +154,7 @@ jQuery(document).ready(function () {
 
 });
 
-var role="";
+var role = "";
 function loadtable() {
 	$.ajax({
 		type: 'POST',
@@ -172,8 +173,8 @@ function loadtable() {
 		},
 		success: function (obj) {
 			if (obj.status) {
-				 role = obj.role;
-				
+				role = obj.role;
+
 				$('#listMember').DataTable({
 					data: obj.response,
 					columns: [
@@ -227,16 +228,16 @@ function loadtable() {
 							data: "id",
 							mRender: function (data, type, row) {
 								var str;
-								var d= '"'+row.instToken + '","' + row.nameOfInstance+'"' ;
+								var d = '"' + row.instToken + '","' + row.nameOfInstance + '"';
 								if (role == 'admin') {
 									str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
-											"onclick='progress("+d+")' > Run Apex" +
+										"onclick='progress(" + d + ")' > Run Apex" +
 										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=backup('" + row.instToken + "')> BackUp" +
 										"</button>" + "<button class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> <i class='fa fa-history'></i>" +
 										"</button>";
 								} else {
 									str = "<button class='btn btn-xs green dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' " +
-										"onclick='progress("+d+")' > Run Apex" +
+										"onclick='progress(" + d + ")' > Run Apex" +
 										"</button>" + "<button  class='btn btn-xs blue dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='false' onclick=showinstdetails('" + row.instToken + "')> <i class='fa fa-history'></i>" +
 										"</button>";
 								}
@@ -249,12 +250,12 @@ function loadtable() {
 				});
 				App.unblockUI();
 				if (role != 'admin') {
-					
-					$("#listMember tr").each(function(){
-					   $(this).find("td:first").hide(); //put elements into array
+
+					$("#listMember tr").each(function () {
+						$(this).find("td:first").hide(); //put elements into array
 					});
-					 $("th:first").hide();
-					 $("#new_user").hide();
+					$("th:first").hide();
+					$("#new_user").hide();
 				}
 			} else if (!obj.status) {
 				error("Problem occures during process");
@@ -343,13 +344,13 @@ $("#inst").click(function () {
 	};
 });
 
-var id= 1;
+var id = 1;
 
-function progress(token,name) {
-	
+function progress(token, name) {
+
 	$.ajax({
 		type: 'POST',
-		url: "apex/getprogress?instancetoken="+token,
+		url: "apex/getprogress?instancetoken=" + token,
 		dataType: "JSON",
 		async: false,
 		processData: false,
@@ -378,38 +379,38 @@ function progress(token,name) {
 				$('#new_inst').modal('show');
 				$('[name=uid]').val(token);
 				$('#instname').text(name);
-				$("#apex").attr('disabled','disabled');
-				$("#call").attr('disabled','disabled');
-				
+				$("#apex").attr('disabled', 'disabled');
+				$("#call").attr('disabled', 'disabled');
+
 				App.unblockUI();
-			} else{ 
-				if (data.code==102) {
+			} else {
+				if (data.code == 102) {
 					runapex(token, name);
 					App.unblockUI();
-				}else {
+				} else {
 					error("Problem occures during process pr1");
 					App.unblockUI();
 				}
-			} 
+			}
 		},
 		error: function () {
 			viewcounter();
 			error("Problem occures during process pr2");
 			App.unblockUI();
 		}
-	});	
+	});
 }
 
 function runapex(token, name) {
 	viewcounter();
-	var n = Number($("#sc").text());
+	var n = Number($("#remainingruns").val());
 	if (n <= 0) {
 		if (role == 'admin') {
 			warnadmin();
-		}else {
+		} else {
 			warnuser();
 		}
-		
+
 	} else {
 		$("#apex").attr('disabled', false);
 		$("#call").attr('disabled', false);
@@ -425,54 +426,54 @@ function runapex(token, name) {
 		$('#new_inst').modal('show');
 		$('[name=uid]').val(token);
 		$('#instname').text(name);
-		
+
 	}
 
 }
-function settime(){
-	
-		$.ajax({
-			type: 'POST',
-			url: "apex/getprogress?instancetoken="+($("#uid").val()),
-			dataType: "JSON",
-			async: false,
-			processData: false,
-			cache: false,
-			contentType: "application/json",
-			beforeSend: function () {
-				App.blockUI({
-					boxed: true,
-					message: "Please Wait..."
-				});
-			},
-			success: function (data) {
-				viewcounter();
-				if (data.status) {
-					var elem = document.getElementById("myBar");
-					elem.style.width = data.response['percentage'] + '%';
-					$('#pvalue').text(data.response['percentage']+"%");
-					App.unblockUI();
-				} else{ 
-					if (data.code==102) {
-						clearInterval(id);
-						runapex($('[name=uid]').val(), $('#instname').text());
-						App.unblockUI();
-					}else {
-						error("Problem occures during process pr1");
-						App.unblockUI();
-					}
-				} 
-			},
-			error: function () {
-				viewcounter();
-				error("Problem occures during process pr2");
+function settime() {
+
+	$.ajax({
+		type: 'POST',
+		url: "apex/getprogress?instancetoken=" + ($("#uid").val()),
+		dataType: "JSON",
+		async: false,
+		processData: false,
+		cache: false,
+		contentType: "application/json",
+		beforeSend: function () {
+			App.blockUI({
+				boxed: true,
+				message: "Please Wait..."
+			});
+		},
+		success: function (data) {
+			viewcounter();
+			if (data.status) {
+				var elem = document.getElementById("myBar");
+				elem.style.width = data.response['percentage'] + '%';
+				$('#pvalue').text(data.response['percentage'] + "%");
 				App.unblockUI();
+			} else {
+				if (data.code == 102) {
+					clearInterval(id);
+					runapex($('[name=uid]').val(), $('#instname').text());
+					App.unblockUI();
+				} else {
+					error("Problem occures during process pr1");
+					App.unblockUI();
+				}
 			}
-		});	
-		
-		// progress($('[name=uid]').val(),$('#instname').text(name));
-	
-	
+		},
+		error: function () {
+			viewcounter();
+			error("Problem occures during process pr2");
+			App.unblockUI();
+		}
+	});
+
+	// progress($('[name=uid]').val(),$('#instname').text(name));
+
+
 }
 
 $("#inst-run").click(function () {
@@ -483,7 +484,7 @@ $("#inst-run").click(function () {
 		"num": $("#call").val().toString(),
 	};
 	viewcounter();
-	var n = Number($("#sc").text());
+	var n = Number($("#remainingruns").val());
 	var d = Number($("#call").val());
 	if (n < d) {
 		$("#call").rules("add", {
@@ -494,7 +495,7 @@ $("#inst-run").click(function () {
 		console.log();
 		$("#inst-stop").show();
 		$("#inst-run").hide();
-		id=	setInterval("settime()", 1000);
+		id = setInterval("settime()", 1000);
 		runcode(form);
 	};
 
@@ -512,31 +513,31 @@ function runcode(form) {
 			cache: false,
 			contentType: "application/json",
 			beforeSend: function () {
-				
+
 			},
 			success: function (data) {
 				viewcounter();
 				if (data.status) {
 					success("DONE");
 					App.unblockUI();
-					
+
 					// postprocess();
 				} else if (!data.status) {
 					error("Problem occures during process c1");
 					App.unblockUI();
-				} else { 
+				} else {
 					error("Problem occures during process c2");
 					App.unblockUI();
 				}
 			},
 			error: function () {
-				$("#apex").attr('disabled','disabled');
-				$("#call").attr('disabled','disabled');
+				$("#apex").attr('disabled', 'disabled');
+				$("#call").attr('disabled', 'disabled');
 				viewcounter();
-				
+
 				// error("Problem occures during process c3");
 				App.unblockUI();
-				
+
 			}
 		});
 	}
@@ -676,7 +677,7 @@ function viewUser(token) {
 		success: function (data) {
 
 			if (data.status) {
-				console.log(data);
+			
 				$('#viewtoken').text(data.response['coustomerName']);
 				$('#securityCode1').text(data.response['securityCode']);
 				$('#type').text(data.response['sandbox']);
@@ -698,7 +699,7 @@ function viewUser(token) {
 }
 
 $("#inst-update").click(function () {
-	 
+
 	var form = {
 		"instToken": $("[name=uid]").val(),
 		"coustomerName": $("#nameOfCoustomer").val(),
@@ -755,11 +756,10 @@ $("#inst-update").click(function () {
 function viewcounter() {
 
 	$.ajax({
-		type: 'POST',
-		url: "backup/getinstinfo",
+		type: 'GET',
+		url: "company/getruns",
 		dataType: "JSON",
 		async: true,
-
 		processData: false,
 		cache: false,
 		contentType: false,
@@ -767,10 +767,8 @@ function viewcounter() {
 		success: function (data) {
 
 			if (data.status) {
-				$("#fc").text(data.totalcalls);
-				$("#sc").text(data.remainingcalls);
-				$("#tc").text(data.totalinst);
-
+				
+				$("#remainingruns").val(data.remainingcalls);
 			}
 			else {
 				error("Problem occures during process");
@@ -792,7 +790,7 @@ $('#backup-btn').on("click", function () {
 		var form = $('.backup-form')[0];
 		// Create an FormData object
 		var data = new FormData(form);
-		console.log(form)
+
 		$.ajax({
 			type: "POST",
 			enctype: 'multipart/form-data',
@@ -847,15 +845,15 @@ function sleep(milliseconds) {
 
 function warnadmin() {
 	swal({
-		title: "Error",
-		text: "You have no run's remaining ,Please purchase it",
+		title: "",
+		text: "Please purchase a plan to continue",
 		icon: "warning",
 		buttons: true,
 		dangerMode: true,
 	}).then((willDelete) => {
 
 		if (willDelete) {
-			
+
 			price();
 		}
 		else {
@@ -868,11 +866,11 @@ function warnadmin() {
 function warnuser() {
 	swal("NO run's", "Please contact admin", "warning");
 }
-function price(){
+function price() {
 	$('#price').modal('show');
 }
 
-function purchaseruns(count){
+function purchaseruns(count) {
 	console.log(count);
 	$.ajax({
 		type: 'POST',
@@ -908,14 +906,14 @@ function purchaseruns(count){
 			App.unblockUI();
 		}
 	});
-	
+
 }
 
-function purchaseruns(p,run) {
-	
+function purchaseruns(p, run) {
+
 	$.ajax({
 		type: 'POST',
-		url: "/payment/ordercreat?amount="+p,
+		url: "/payment/ordercreat?amount=" + p,
 		dataType: "JSON",
 		async: false,
 		processData: false,
@@ -925,44 +923,44 @@ function purchaseruns(p,run) {
 			/*
 			 * App.blockUI({ boxed: true, message: "Please Wait..." });
 			 */
-			
+
 		},
 		success: function (data) {
-			if (data.orders_status=='created') {
-				
+			if (data.orders_status == 'created') {
+
 				var options = {
-					    "key": data.key, 
-					    "amount": data.amount, 
-					    "currency": data.currency,
-					    "name": data.company_name,
-					    "description": "A Wild Sheep Chase is the third novel by Japanese author  Haruki Murakami",
-					    "image": "data:image/jpeg;base64,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",
-					    "order_id": data.order_id,
-					    "handler": function (response){
-					    	var form = {
-					    			"razorpay_payment_id":response.razorpay_payment_id,
-					    			"razorpay_payment_id": response.razorpay_payment_id,
-					    			"razorpay_signature": response.razorpay_signature,
-					    			"runs": run
-					    		};
-					    	updateruns(form);
-					    	
-					    },
-					    "prefill": {
-					        "name": data.username,
-					        "email": data.email
-					    },
-					    "notes": {
-					        "address": "note value"
-					    },
-					    "theme": {
-					        "color": "#F37254"
-					    }
-					};
+					"key": data.key,
+					"amount": data.amount,
+					"currency": data.currency,
+					"name": data.company_name,
+					"description": "A Wild Sheep Chase is the third novel by Japanese author  Haruki Murakami",
+					"image": "data:image/jpeg;base64,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",
+					"order_id": data.order_id,
+					"handler": function (response) {
+						var form = {
+							"razorpay_payment_id": response.razorpay_payment_id,
+							"razorpay_payment_id": response.razorpay_payment_id,
+							"razorpay_signature": response.razorpay_signature,
+							"runs": run
+						};
+						updateruns(form);
+
+					},
+					"prefill": {
+						"name": data.username,
+						"email": data.email
+					},
+					"notes": {
+						"address": "note value"
+					},
+					"theme": {
+						"color": "#F37254"
+					}
+				};
 				App.unblockUI();
-					var rzp1 = new Razorpay(options);
-					    rzp1.open();
-					    // e.preventDefault();
+				var rzp1 = new Razorpay(options);
+				rzp1.open();
+				// e.preventDefault();
 				success(data.message);
 				// postprocess();
 			} else if (!data.orders_status) {
@@ -981,9 +979,70 @@ function purchaseruns(p,run) {
 	});
 }
 
+function loadpricetable() {
+	$.ajax({
+		type: 'GET',
+		url: "price/getall",
+		dataType: "JSON",
+		async: true,
+		processData: false,
+		cache: false,
+		contentType: "application/json",
+		beforeSend: function () {
+
+			App.blockUI({
+				boxed: true,
+				message: "Please Wait..."
+			});
+		},
+		success: function (data) {
+			if (data.status) {
+				var str='';
+				for (var i = 0; i < data.response.length; i++) {
+					
+					 str = str+'<div class="col-md-3 no-padding">' +
+									'<div class="price-column-container border-right border-top border-left">' +
+										'<div class="price-table-head price-1">' +
+											'<h2 class="uppercase no-margin">'+data.response[i].name+'</h2>' +
+										'</div>' +
+										'<div class="price-table-pricing">' +
+											'<h3><span class="price-sign">$</span>'+data.response[i].price+'</h3>' +
+											'<p class="uppercase"></p>' +
+										'</div>' +
+										'<div class="price-table-content">' +
+											'<div class="row no-margin">' +
+												'<div class="col-xs-3 text-right">' +
+													'<i class="fa fa-exchange"></i>' +
+												'</div>' +
+												'<div class="col-xs-9 text-left uppercase">'+data.response[i].runs+' Runns</div>' +
+												'</div>' +
+											'</div>' +
+											'<div class="price-table-footer">' +
+												'<button type="button"class="btn grey-salsa btn-outline sbold uppercase bold"onclick="purchaseruns('+data.response[i].price+','+data.response[i].runs+')">Get It</button>' +
+											'</div>' +
+										'</div>' +
+									'</div>'+
+								'</div>';
+				}
+				$("#pricetable").append(str);
+				App.unblockUI();
+				viewcounter();
+			} else if (!data.status) {
+				error("Problem occures during process");
+				App.unblockUI();
+			} else {
+				error("Problem occures during process");
+				App.unblockUI();
+			}
+		},
+		error: function () {
+			error("Problem occures during process");
+			App.unblockUI();
+		}
+	});
+}
+
 function updateruns(response) {
-	
-	
 	$.ajax({
 		type: 'POST',
 		url: "payment/updaterun",
@@ -1019,5 +1078,5 @@ function updateruns(response) {
 			App.unblockUI();
 		}
 	});
-	
+
 }

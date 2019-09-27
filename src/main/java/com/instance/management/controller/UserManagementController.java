@@ -32,7 +32,7 @@ public class UserManagementController {
 
 	@Autowired
 	UserReposetory userrepo;
-	
+
 	@Autowired
 	CompanyReposetory companyReposetory;
 
@@ -58,21 +58,20 @@ public class UserManagementController {
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		if (userModel.getPassword().equals(userModel.getRpassword())) {
-			
-			
-			CompanyMetaModel companyMetaModel=companyReposetory.findBycompanyname(userModel.getCompanyId().toUpperCase());
-			
-			if (companyMetaModel==null) {
-				companyMetaModel=new CompanyMetaModel();
+
+			CompanyMetaModel companyMetaModel = companyReposetory
+					.findBycompanyname(userModel.getCompanyId().toUpperCase());
+
+			if (companyMetaModel == null) {
+				companyMetaModel = new CompanyMetaModel();
 				companyMetaModel.setCompanyname(userModel.getCompanyId().toUpperCase());
 				companyMetaModel.setToken(randomToken.getToken(10));
 				companyMetaModel.setTotalruns(0);
 				companyMetaModel.setRemainingruns(0);
 			}
-			
-			
-			
+
 			UserMetaModel userMetaModel = new UserMetaModel();
+			userMetaModel.setCompanyName(companyMetaModel.getCompanyname());
 			userMetaModel.setUsername(userModel.getUsername());
 			userMetaModel.setUserid(userModel.getUserid());
 			userMetaModel.setStatus(false);

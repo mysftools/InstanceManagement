@@ -1,4 +1,5 @@
 <div class="page-container">
+	<input type="hidden" id="remainingruns" name="remainingruns" />
 	<!-- BEGIN CONTENT -->
 	<div class="page-content-wrapper">
 		<!-- BEGIN CONTENT BODY -->
@@ -21,67 +22,19 @@
 				<!-- BEGIN PAGE CONTENT INNER -->
 				<div class="page-content-inner">
 					<div class="row">
-						<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-							<div class="dashboard-stat2 ">
-								<div class="display">
-									<div class="number">
-										<h3 class="font-green-sharp">
-											<span id="fc">0</span>
-										</h3>
-										<small>TOTAL RUNS</small>
-									</div>
-									<div class="icon">
-										<i class="icon-pie-chart"></i>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-							<div class="dashboard-stat2 ">
-								<div class="display">
-									<div class="number">
-										<h3 class="font-red-haze">
-											<span id="sc">0</span>
-										</h3>
-										<small>REMAINANG RUNS</small>
-									</div>
-									<div class="icon">
-										<i class="icon-pie-chart"></i>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-							<div class="dashboard-stat2 ">
-								<div class="display">
-									<div class="number">
-										<h3 class="font-blue-sharp">
-											<span id="tc"></span>
-										</h3>
-										<small>Total Instance</small>
-									</div>
-									<div class="icon">
-										<i class="icon-basket"></i>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
 						<div class="col-md-12">
 							<!-- BEGIN EXAMPLE TABLE PORTLET-->
 							<div class="portlet light ">
 								<div class="portlet-title">
 									<div class="caption font-dark">
-										<span class="caption-subject bold uppercase">Instance
-											Table</span>
+										<span class="caption-subject bold uppercase">Instance</span>
 									</div>
 								</div>
 								<div class="portlet-body">
 									<div class="table-toolbar">
 										<div class="row">
 											<div class="col-md-6">
-												<div class="btn-group">												
+												<div class="btn-group">
 													<button class="btn sbold green" id="new_user"
 														<% if(!session.getAttribute("role").equals("admin")){ %>
 														disabled="disabled" <%} %>> Add New <i class="fa fa-plus"></i>
@@ -328,178 +281,15 @@
 					<div class="portlet-body">
 						<div class="pricing-content-2">
 							<div class="pricing-table-container">
-								<div class="row padding-fix">
-									<div class="col-md-3 no-padding">
-										<div class="price-column-container border-right border-top border-left">
-											<div class="price-table-head price-1">
-												<h2 class="uppercase no-margin">Budget</h2>
-											</div>
-											<div class="price-table-pricing">
-												<h3>
-													<span class="price-sign">$</span>24</h3>
-												<p class="uppercase">per month</p>
-											</div>
-											<div class="price-table-content">
-												<!-- <div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="icon-user"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase">3 Members</div>
-												</div> -->
-												<div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="fa fa-exchange"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase">50 Runns</div>
-												</div>
-												<!-- <div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="icon-screen-smartphone"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase">Single Device</div>
-												</div>
-												<div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="icon-refresh"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase">Monthly Backups</div>
-												</div> -->
-											</div>
-											<div class="price-table-footer">
-												<button type="button" class="btn grey-salsa btn-outline sbold uppercase bold" onclick="purchaseruns(500,50)">Get It</button>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-3 no-padding">
-										<div class="price-column-container border-top">
-											<div class="price-table-head price-1">
-												<h2 class="uppercase no-margin">Solo</h2>
-											</div>
-											<div class="price-table-pricing">
-												<h3>
-													<span class="price-sign">$</span>39</h3>
-												<p class="uppercase">per month</p>
-											</div>
-											<div class="price-table-content">
-												<!-- <div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="icon-user"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase">5 Members</div>
-												</div> -->
-												<div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="fa fa-exchange"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase">100 Runns</div>
-												</div>
-												<!-- <div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="icon-screen-smartphone"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase">Single Device</div>
-												</div>
-												<div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="icon-refresh"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase">Weekly Backups</div>
-												</div> -->
-											</div>
-											<div class="price-table-footer">
-												<button type="button" class="btn grey-salsa btn-outline sbold uppercase bold" onclick="purchaseruns(1000,100)">Get It</button>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-3 no-padding">
-										<div class="price-column-container featured-price border-top">
-											<div class="price-feature-label uppercase bg-green-jungle">Best Value</div>
-											<div class="price-table-head price-2">
-												<h2 class="uppercase no-margin">Start up</h2>
-											</div>
-											<div class="price-table-pricing">
-												<h3>
-													<span class="price-sign">$</span>59</h3>
-												<p class="uppercase">per month</p>
-											</div>
-											<div class="price-table-content">
-												<!-- <div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="icon-user-follow"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase">20 Members</div>
-												</div> -->
-												<div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="fa fa-exchange"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase">500 Runns</div>
-												</div>
-												<!-- <div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="icon-cloud-download"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase font-green sbold">Cloud Syncing</div>
-												</div>
-												<div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="icon-refresh"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase font-green sbold">Daily Backups</div>
-												</div> -->
-											</div>
-											<div class="price-table-footer">
-												<button type="button" class="btn green featured-price uppercase" onclick="purchaseruns(5000,500)">Get it now!</button>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-3 no-padding">
-										<div class="price-column-container border-top border-right">
-											<div class="price-table-head price-3">
-												<h2 class="uppercase no-margin">Enterprise</h2>
-											</div>
-											<div class="price-table-pricing">
-												<h3>
-													<span class="price-sign">$</span>128</h3>
-												<p class="uppercase">per month</p>
-											</div>
-											<div class="price-table-content">
-												<!-- <div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="icon-users"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase">100 Members</div>
-												</div> -->
-												<div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="fa fa-exchange"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase font-green sbold">1000 Runns</div>
-												</div>
-												<!-- <div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="icon-cloud-download"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase">Cloud Syncing</div>
-												</div>
-												<div class="row no-margin">
-													<div class="col-xs-3 text-right">
-														<i class="icon-refresh"></i>
-													</div>
-													<div class="col-xs-9 text-left uppercase">Weekly Backups</div>
-												</div> -->
-											</div>
-											<div class="price-table-footer">
-												<button type="button" class="btn grey-salsa btn-outline sbold uppercase bold" onclick="purchaseruns(10000,1000)">Get It</button>
-											</div>
-										</div>
-									</div>
+								<div class="row padding-fix" id="pricetable">
+									
+									
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>		
+			</div>
 		</div>
 		<!-- /.modal-content -->
 	</div>

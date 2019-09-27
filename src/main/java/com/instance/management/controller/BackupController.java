@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,9 +23,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.instance.management.backup.BackUpService;
 import com.instance.management.model.BackUpMetaModel;
-import com.instance.management.model.CompanyMetaModel;
-import com.instance.management.model.InstanceMetaModel;
-import com.instance.management.model.UserMetaModel;
 import com.instance.management.reposetory.BackUpReposetory;
 import com.instance.management.reposetory.CompanyReposetory;
 import com.instance.management.reposetory.InstanceReposetory;
@@ -146,50 +142,41 @@ public class BackupController {
 	 * "Some error has bean occured"); return map; } }
 	 */
 
-	@PostMapping("/getinstinfo")
-	public @ResponseBody Object getinstanceinfo(HttpServletResponse response, HttpSession session) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			if (!LoginController.userValidate(session)) {
-				response.sendRedirect("/");
-				return null;
-			}
-			if (session.getAttribute("role").toString().equals("admin")) {
-				CompanyMetaModel companyMetaModel = companyReposetory
-						.findBytoken(session.getAttribute("company").toString());
-				List<InstanceMetaModel> instanceMetaModels = instanceReposetory
-						.findBytoken(session.getAttribute("token").toString());
-				map = new HashMap<String, Object>();
-				map.put("status", true);
-				map.put("message", "Data back up successfully");
-				map.put("totalinst", instanceMetaModels.size());
-				map.put("totalcalls", companyMetaModel.getTotalruns());
-				map.put("remainingcalls", companyMetaModel.getRemainingruns());
-				return map;
-			} else {
-				CompanyMetaModel companyMetaModel = companyReposetory
-						.findBytoken(session.getAttribute("company").toString());
-				UserMetaModel userMetaModel=userrepo.findBytoken(session.getAttribute("token").toString());
-				
-				map = new HashMap<String, Object>();
-				map.put("status", true);
-				map.put("message", "Data back up successfully");
-				map.put("totalinst",userMetaModel.getListInst().split(",").length);
-				map.put("totalcalls", companyMetaModel.getTotalruns());
-				map.put("remainingcalls", companyMetaModel.getRemainingruns());
-				return map;
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			map = new HashMap<String, Object>();
-			map.put("status", false);
-			map.put("message", "Some error has bean occured");
-			return map;
-		}
-
-	}
-
+	/*
+	 * @PostMapping("/getinstinfo") public @ResponseBody Object
+	 * getinstanceinfo(HttpServletResponse response, HttpSession session) {
+	 * Map<String, Object> map = new HashMap<String, Object>(); try { if
+	 * (!LoginController.userValidate(session)) { response.sendRedirect("/"); return
+	 * null; } if (session.getAttribute("role").toString().equals("admin")) {
+	 * CompanyMetaModel companyMetaModel = companyReposetory
+	 * .findBytoken(session.getAttribute("company").toString());
+	 * List<InstanceMetaModel> instanceMetaModels = instanceReposetory
+	 * .findBytoken(session.getAttribute("token").toString()); map = new
+	 * HashMap<String, Object>(); map.put("status", true); map.put("message",
+	 * "Data back up successfully"); map.put("totalinst",
+	 * instanceMetaModels.size()); map.put("totalcalls",
+	 * companyMetaModel.getTotalruns()); map.put("remainingcalls",
+	 * companyMetaModel.getRemainingruns()); return map; } else { CompanyMetaModel
+	 * companyMetaModel = companyReposetory
+	 * .findBytoken(session.getAttribute("company").toString()); UserMetaModel
+	 * userMetaModel =
+	 * userrepo.findBytoken(session.getAttribute("token").toString());
+	 * 
+	 * map = new HashMap<String, Object>(); map.put("status", true);
+	 * map.put("message", "Data back up successfully"); map.put("totalinst",
+	 * userMetaModel.getListInst().split(",").length); map.put("totalcalls",
+	 * companyMetaModel.getTotalruns()); map.put("remainingcalls",
+	 * companyMetaModel.getRemainingruns()); return map; }
+	 * 
+	 * } catch (Exception e) { e.printStackTrace(); map = new HashMap<String,
+	 * Object>(); map.put("status", false); map.put("message",
+	 * "Some error has bean occured"); return map; }
+	 * 
+	 * }
+	 */
+	
+	
+	
 	/*
 	 * @PostMapping("/fileupload")
 	 * 

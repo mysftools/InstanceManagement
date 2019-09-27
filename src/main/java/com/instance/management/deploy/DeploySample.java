@@ -24,6 +24,7 @@
 	 * the zip file.
 	 */
 /*
+ * 
  * public class DeploySample { // binding for the metadata WSDL used for making
  * metadata API calls private MetadataConnection metadataConnection;
  * 
@@ -92,6 +93,7 @@
 	 * @throws Exception - if cannot find the zip file to deploy
 	 */
 /*
+ * 
  * private byte[] readZipFile() throws Exception { // We assume here that you
  * have a deploy.zip file. // See the retrieve sample for how to retrieve a zip
  * file. File deployZip = new File(ZIP_FILE); if (!deployZip.exists() ||
@@ -103,7 +105,6 @@
  * bos = new ByteArrayOutputStream(); int readbyte = -1; while ((readbyte =
  * fos.read()) != -1) { bos.write(readbyte); } fos.close(); bos.close(); return
  * bos.toByteArray(); }
- * 
  * 
  *//**
 	 * Print out any errors, if any, related to the deploy.
@@ -137,14 +138,14 @@
 		 * if (errorMessageBuilder.length() > 0) { errorMessageBuilder.insert(0,
 		 * messageHeader); System.out.println(errorMessageBuilder.toString()); } }
 		 * 
-		 * private void createMetadataConnection( final String username, final String
+		 * private void createMetadataConnection(final String username, final String
 		 * password, final String loginUrl) throws ConnectionException {
 		 * 
 		 * final ConnectorConfig loginConfig = new ConnectorConfig();
 		 * loginConfig.setAuthEndpoint(loginUrl);
 		 * loginConfig.setServiceEndpoint(loginUrl); loginConfig.setManualLogin(true);
-		 * LoginResult loginResult = (new EnterpriseConnection(loginConfig)).login(
-		 * username, password);
+		 * LoginResult loginResult = (new
+		 * EnterpriseConnection(loginConfig)).login(username, password);
 		 * 
 		 * final ConnectorConfig metadataConfig = new ConnectorConfig();
 		 * metadataConfig.setServiceEndpoint(loginResult.getMetadataServerUrl());

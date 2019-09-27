@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -96,4 +97,30 @@ public class CompanyManagementController {
 
 	}
 
+	@GetMapping("/getruns")
+	public @ResponseBody Object getRuns(HttpServletResponse response, HttpSession session) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			if (!LoginController.userValidate(session)) {
+				response.sendRedirect("/");
+				return null;
+			}
+
+			CompanyMetaModel companyMetaModel = companyReposetory
+					.findBytoken(session.getAttribute("company").toString());
+
+			map = new HashMap<String, Object>();
+			map.put("status", true);
+			map.put("message", "Data back up successfully");
+			map.put("remainingcalls", companyMetaModel.getRemainingruns());
+			return map;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			map = new HashMap<String, Object>();
+			map.put("status", false);
+			map.put("message", "Some error has bean occured");
+			return map;
+		}
+	}
 }
