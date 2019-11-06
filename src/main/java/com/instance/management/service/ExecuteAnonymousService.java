@@ -78,7 +78,7 @@ public class ExecuteAnonymousService implements Runnable {
 				String instdetailtoken = map.get("token").toString();
 				float p = (float) (double) 100 / apexModel.getNum();
 				float p1 = p;
-				System.out.println(p);
+				
 				ProgressBarMetaModel progressBarMetaModel = new ProgressBarMetaModel();
 				progressBarMetaModel.setInstrundtoken(instdetailtoken);
 				progressBarMetaModel.setPercentage(p);
@@ -112,17 +112,13 @@ public class ExecuteAnonymousService implements Runnable {
 						session);
 				ProgressBarMetaModel progressBarMetaModel1 = progressBarReposetory.findByinstrundtoken(instdetailtoken);
 				progressBarReposetory.delete(progressBarMetaModel1);
-				runapex(responsemessage);
-			} else {
-				runapex(responsemessage);
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public Object runapex(Map<String, Object> responsemessage) {
-		return responsemessage;
-	}
+	
 
 }
